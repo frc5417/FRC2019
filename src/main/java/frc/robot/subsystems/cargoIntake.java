@@ -66,7 +66,7 @@ public class cargoIntake extends Subsystem {
     }
   }
 
-  public void cargoPull(Boolean button)
+  public void cargoPull(Boolean button){
     if (button) {
       cargoLeft.set(1); //make other side negative if this outtakes instead of intakes
       cargoRight.set(-1);

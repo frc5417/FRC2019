@@ -9,7 +9,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.VictorSP;
 
 
@@ -24,6 +23,7 @@ public class hatchIntake extends Subsystem {
   // here. Call these from Commands.
   Servo hatchGrabber = new Servo(2);
   VictorSP piston = new VictorSP(3);
+  
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
