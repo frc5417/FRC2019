@@ -11,14 +11,11 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.Compressor;
 
 
 import frc.robot.subsystems.driveTrain;
-//import frc.robot.subsystems.hatchIntake;
-// import frc.robot.eagleControl;
-import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.Solenoid;
+import frc.robot.subsystems.hatchIntake;
+import frc.robot.subsystems.cargoIntake;
 
 
 /**
@@ -34,16 +31,16 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
+
+  //Defining object variables (naming subsystems)
+  public static Joystick mController;
   public static Joystick dController;
   public static frc.robot.subsystems.driveTrain drive;
-  //public static hatchIntake hatchIntake;
+  public static hatchIntake hatchIntake;
+  public static cargoIntake cargoIntake;
   
-  Compressor pump = new Compressor();
-  Servo servo = new Servo(4);
-  Solenoid piston = new Solenoid(0);
 
-  // NetworkTableEntry xEntry;
-  // NetworkTableEntry yEntry;
+
 
 
 
@@ -60,15 +57,11 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
     
 
-
+    mController = new Joystick(1);
     dController = new Joystick(0);
     drive = new driveTrain();
 
-    //pump.start();
   }
-  Boolean buttonAstate = false;
-  Boolean buttonBState = false;
-  Boolean buttonYState = false;
 
 
   /**
@@ -123,40 +116,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    // xEntry.setDouble(x);
-    // yEntry.setDouble(y);
-
-
     drive.SetPower(-dController.getRawAxis(1), -dController.getRawAxis(5));
 
-
-    //hatchIntake.grabHatch(dController.wasAPressed);
-    
-    //hatchIntake.scoreHatch(dController.wasYPressed);
-
-
-    if(dController.getRawButton(5)){
-      servo.set(5);
-    }
-
-    else if (dController.getRawButton(6)){
-      servo.set(0);
-    }
-
-    else if(dController.getRawButton(1)){
-        pump.start();
-    }
-    else if(dController.getRawButton(2)){
-      pump.stop();
-    }
-
-    else if(dController.getRawButton(3)){
-      piston.set(true);
-    }
-
-    else if (dController.getRawButton(4)){
-      piston.set(false);
-    }
 
   }
 

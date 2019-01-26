@@ -1,0 +1,5 @@
+PWM:
+cargoLeft - 0
+cargoRight - 1
+hatchIntakeServo - 2
+hatchOuttakeMotor - 3
