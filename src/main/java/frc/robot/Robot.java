@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 import frc.robot.subsystems.driveTrain;
+import frc.robot.subsystems.elevator;
 import frc.robot.subsystems.hatchIntake;
 import frc.robot.subsystems.cargoIntake;
 
@@ -38,6 +39,7 @@ public class Robot extends TimedRobot {
   public static frc.robot.subsystems.driveTrain drive;
   public static hatchIntake hatchIntake;
   public static cargoIntake cargoIntake;
+  public static elevator lift;
   
 
 
@@ -60,6 +62,7 @@ public class Robot extends TimedRobot {
     mController = new Joystick(1);
     dController = new Joystick(0);
     drive = new driveTrain();
+    lift = new elevator();
 
   }
 
@@ -118,6 +121,7 @@ public class Robot extends TimedRobot {
 
     drive.SetPower(-dController.getRawAxis(1), -dController.getRawAxis(5));
 
+    lift.liftStage1(dController.getRawButton(1));
 
   }
 
