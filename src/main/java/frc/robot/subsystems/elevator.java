@@ -28,8 +28,8 @@ public class elevator extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  CANSparkMax liftMaster = new CANSparkMax(3, MotorType.kBrushless); //CAN Id 3
-  CANSparkMax liftSlave = new CANSparkMax(4, MotorType.kBrushless); //CAN Id 4
+  CANSparkMax liftMaster = new CANSparkMax(6, MotorType.kBrushless); //CAN Id 6
+  CANSparkMax liftSlave = new CANSparkMax(7, MotorType.kBrushless); //CAN Id 7
 
 
 
@@ -42,7 +42,7 @@ public class elevator extends Subsystem {
     neoEncoder = liftMaster.getEncoder(); //assign encoder variable from master NEO 
 
     liftPID = liftMaster.getPIDController(); //assign name to PID contoller
-    liftMaster.follow(liftMaster); //tell slave motor to follow master moter
+    liftSlave.follow(liftMaster); //tell slave motor to follow master moter
 
         // PID coefficients
         kP = 0.1; 
@@ -69,6 +69,15 @@ public class elevator extends Subsystem {
   public void liftStage1(Boolean button){
     if (button){
       liftPID.setReference(1, ControlType.kPosition); //if button is pressed, motor holds position at 1 turn
+    }
+    else {
+      liftPID.setReference(0, ControlType.kPosition); //if button is not pressed, motor holds position at 0 turns
+    }
+  }
+
+  public void liftStage2(Boolean button){
+    if (button){
+      liftPID.setReference(2, ControlType.kPosition); //if button is pressed, motor holds position at 1 turn
     }
     else {
       liftPID.setReference(0, ControlType.kPosition); //if button is not pressed, motor holds position at 0 turns

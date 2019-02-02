@@ -123,6 +123,8 @@ public class Robot extends TimedRobot {
 
     lift.liftStage1(dController.getRawButton(1));
 
+    lift.liftStage2(dController.getRawButton(2));
+
   }
 
   /**
