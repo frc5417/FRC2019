@@ -9,8 +9,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.Solenoid;
-
+import edu.wpi.first.wpilibj.VictorSP;
 
 
 
@@ -22,9 +21,9 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class hatchIntake extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  Solenoid piston = new Solenoid(0);
-  Servo hatchGrabber = new Servo(4);
-
+  Servo hatchGrabber = new Servo(2);
+  VictorSP piston = new VictorSP(3);
+  
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
@@ -48,12 +47,12 @@ public class hatchIntake extends Subsystem {
 
   public void scoreHatch(Boolean button){
     if(button && !buttonScoreState){
-      piston.set(true);
+      piston.set(.75);
       buttonScoreState = true;
 
     }
     else if (button && buttonScoreState){
-      piston.set(false);
+      piston.set(0);
       buttonScoreState = false;
    }
   }

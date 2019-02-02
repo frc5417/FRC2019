@@ -1,0 +1,15 @@
+PWM:
+cargoLeft - 0
+cargoRight - 1
+hatchIntakeServo - 2
+hatchOuttakeMotor - 3
+
+CAN:
+driveLeftMaster - 0 
+driveLeftSlave1 - 1
+driveLeftSlave2 -2
+driveRightMaster- 3
+driveRightSlave1 - 4
+driveRightSlave2 - 5
+ElevatorMaster - 6
+ElevatorSlave - 7
