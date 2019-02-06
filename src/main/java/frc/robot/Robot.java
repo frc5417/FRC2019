@@ -9,15 +9,13 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-
+import frc.robot.subsystems.cargoIntake;
 import frc.robot.subsystems.driveTrain;
 import frc.robot.subsystems.elevator;
 import frc.robot.subsystems.hatchIntake;
-import frc.robot.subsystems.cargoIntake;
+import edu.wpi.first.cameraserver.CameraServer;
 
 
 /**
@@ -58,6 +56,9 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+    
+    CameraServer.getInstance().startAutomaticCapture(0);
+    CameraServer.getInstance().startAutomaticCapture(1);
     
 
     mController = new Joystick(1);

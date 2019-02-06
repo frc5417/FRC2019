@@ -75,7 +75,7 @@ TalonSRX driveRightSlave2 = new TalonSRX(5);
   public void SetPower(double leftPower, double rightPower)
   {
     // m_drive.tankDrive(rightPower, leftPower);
-    driveRightMaster.set(ControlMode.Velocity, rightPower * 5000);
+    driveRightMaster.set(ControlMode.Velocity, rightPower * -5000);
 
 
     driveLeftMaster.set(ControlMode.Velocity, leftPower * 5000);
@@ -87,16 +87,16 @@ TalonSRX driveRightSlave2 = new TalonSRX(5);
       driveRightMaster.set(ControlMode.Velocity, 1000);
 
 
-      driveLeftMaster.set(ControlMode.Velocity, 1000);
+      driveLeftMaster.set(ControlMode.Velocity, -1000);
   
     }
   }
 
   public void printVelocity(Boolean button){
-    System.out.println("Right encoder");
-    System.out.println(driveRightMaster.getSelectedSensorVelocity());
-    System.out.println("left encoder");
-    System.out.println(driveLeftMaster.getSelectedSensorVelocity());
+    // System.out.println("Right encoder");
+    // System.out.println(driveRightMaster.getSelectedSensorVelocity());
+    // System.out.println("left encoder");
+    // System.out.println(driveLeftMaster.getSelectedSensorVelocity());
   }
 
   
