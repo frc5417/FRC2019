@@ -65,6 +65,7 @@ public class Robot extends TimedRobot {
     dController = new Joystick(0);
     drive = new driveTrain();
     lift = new elevator();
+    hatchIntake = new hatchIntake();
 
   }
 
@@ -129,14 +130,17 @@ public class Robot extends TimedRobot {
 
     drive.SetPower(dController.getRawAxis(1), dController.getRawAxis(5));
 
-    drive.printVelocity(dController.getRawButton(3));
+    drive.squareUp(dController.getRawButton(3));
 
     lift.liftStage(dController.getRawButton(1));
 
     lift.dropStage(dController.getRawButton(2));
 
-    drive.driveStraight(dController.getRawButton(4));
+    //drive.driveStraight(dController.getRawButton(4), dController.getRawAxis(1));
 
+
+    hatchIntake.hatchReverse(dController.getRawButton(5));
+    hatchIntake.hatchForward(dController.getRawButton(6));
   }
 
   /**

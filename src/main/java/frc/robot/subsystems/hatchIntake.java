@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj.VictorSP;
 public class hatchIntake extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  Servo hatchGrabber = new Servo(2);
   VictorSP piston = new VictorSP(3);
   
   @Override
@@ -33,28 +32,24 @@ public class hatchIntake extends Subsystem {
   Boolean buttonScoreState = false;
   Boolean buttonGrabState = false;
 
-  public void grabHatch(Boolean button){
-    
-      if(button && !buttonGrabState){
-        hatchGrabber.set(1);
-        buttonGrabState = true;
-      }
-      else if (button && buttonGrabState){
-        hatchGrabber.set(0);
-        buttonGrabState = false;
-     }
-    }
 
-  public void scoreHatch(Boolean button){
-    if(button && !buttonScoreState){
+
+  public void hatchForward(Boolean button){
+    if(button){
       piston.set(.75);
-      buttonScoreState = true;
-
     }
-    else if (button && buttonScoreState){
+    else {
       piston.set(0);
-      buttonScoreState = false;
-   }
+    }
+  }
+
+  public void hatchReverse(Boolean button){
+    if(button){
+      piston.set(-.75);
+    }
+    else {
+      piston.set(0);
+    }
   }
 
     

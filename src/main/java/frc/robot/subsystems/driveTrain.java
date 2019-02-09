@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 //import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 //import edu.wpi.first.wpilibj.SpeedControllerGroup;
@@ -31,6 +32,10 @@ TalonSRX driveLeftSlave2 = new TalonSRX(2);
 TalonSRX driveRightMaster = new TalonSRX(3);
 TalonSRX driveRightSlave1 = new TalonSRX(4);
 TalonSRX driveRightSlave2 = new TalonSRX(5);
+
+AnalogInput sensorRight = new AnalogInput(0);
+AnalogInput sensorLeft = new AnalogInput(1);
+
 
 //test
 
@@ -62,8 +67,13 @@ TalonSRX driveRightSlave2 = new TalonSRX(5);
 
 		
 		/* Set Neutral Mode */
-		driveLeftMaster.setNeutralMode(NeutralMode.Coast);
-		driveRightMaster.setNeutralMode(NeutralMode.Coast);
+    driveLeftMaster.setNeutralMode(NeutralMode.Coast);
+    driveLeftSlave1.setNeutralMode(NeutralMode.Coast);
+    driveLeftSlave2.setNeutralMode(NeutralMode.Coast);
+
+    driveRightMaster.setNeutralMode(NeutralMode.Coast);
+    driveRightSlave1.setNeutralMode(NeutralMode.Coast);
+    driveRightSlave2.setNeutralMode(NeutralMode.Coast);
 		
 		/** Feedback Sensor Configuration */
 		
@@ -82,13 +92,34 @@ TalonSRX driveRightSlave2 = new TalonSRX(5);
 
   }
 
-  public void driveStraight(Boolean button){
+  public void driveStraight(Boolean button, Double throttle){
     if (button){
-      driveRightMaster.set(ControlMode.Velocity, 1000);
-
-
-      driveLeftMaster.set(ControlMode.Velocity, -1000);
+    driveLeftMaster.set(ControlMode.Velocity, throttle * 1500);
+    driveRightMaster.set(ControlMode.Velocity, throttle * -1500);
+    }
+    else {
+      driveLeftMaster.set(ControlMode.Velocity, 0);
+        driveRightMaster.set(ControlMode.Velocity, 0);
+    }
+      
   
+    
+  }
+
+  public void squareUp(boolean button){
+    if (button){
+      if (sensorRight.getValue() < sensorLeft.getValue()){
+        driveRightMaster.set(ControlMode.Velocity, 1500);
+      }
+      else if (sensorLeft.getValue() < sensorRight.getValue()){
+        driveLeftMaster.set(ControlMode.Velocity, -1500);
+      }
+      else if ((sensorRight.getValue() - sensorLeft.getValue() < 2) && (sensorRight.getValue() - sensorLeft.getValue() > -8)){
+        driveLeftMaster.set(ControlMode.Velocity, 1500);
+        driveRightMaster.set(ControlMode.Velocity, -1500);
+
+
+      }
     }
   }
 
