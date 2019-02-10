@@ -119,28 +119,24 @@ public class Robot extends TimedRobot {
   /**
    * This function is called periodically during operator control.
    */
-  double rightSpeed;
-  double leftSpeed;
 
 
   @Override
   public void teleopPeriodic() {
 
-    lift.liftLoop();
+   lift.liftLoop(); //runs elevator pid loop
+   hatchIntake.hatchIntakeloop(); //runs hatch state loop
 
-    drive.SetPower(dController.getRawAxis(1), dController.getRawAxis(5));
+    drive.SetPower(dController.getRawAxis(1), dController.getRawAxis(5)); //left Y axis and Right y axis on drive controller
 
-    drive.squareUp(dController.getRawButton(3));
+    drive.squareUp(dController.getRawButton(3)); //x on drive controller
 
-    lift.liftStage(dController.getRawButton(1));
+    lift.liftStage(dController.getRawButton(1)); //A on drive controller
 
-    lift.dropStage(dController.getRawButton(2));
+    lift.dropStage(dController.getRawButton(2));//B on drive controller
+    
 
-    //drive.driveStraight(dController.getRawButton(4), dController.getRawAxis(1));
 
-
-    hatchIntake.hatchReverse(dController.getRawButton(5));
-    hatchIntake.hatchForward(dController.getRawButton(6));
   }
 
   /**

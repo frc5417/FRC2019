@@ -32,12 +32,14 @@ public class cargoIntake extends Subsystem {
     // setDefaultCommand(new MySpecialCommand());
   }
 
-  public void stopCargoIntake(){
+  public void stopCargoIntake(){ //turns off both cargo intake motors
     cargoLeft.set(0);
-    cargoRight.set(0);
+    cargoRight.set(0); 
   }
 
-  public void cargoLeftHook(Boolean button){
+//all following commands are button holds
+
+  public void cargoLeftHook(Boolean button){ //shoots ball to the left
     if (button) {
       cargoLeft.set(-.4); //make other side negative if this intakes instead of outtakes
       cargoRight.set(1);
@@ -46,7 +48,7 @@ public class cargoIntake extends Subsystem {
       stopCargoIntake();
     }
   }
-  public void cargoRightHook(Boolean button){
+  public void cargoRightHook(Boolean button){ //shoots ball to the right
     if (button) {
       cargoLeft.set(-1); //make other side negative if this intakes instead of outtakes
       cargoRight.set(.4);
@@ -56,7 +58,7 @@ public class cargoIntake extends Subsystem {
     }
   }
 
-  public void cargoFullSend(Boolean button){
+  public void cargoFullSend(Boolean button){ //shoots cargo straight out
     if (button) {
       cargoLeft.set(-1); //make other side negative if this intakes instead of outtakes
       cargoRight.set(1);
@@ -66,7 +68,7 @@ public class cargoIntake extends Subsystem {
     }
   }
 
-  public void cargoPull(Boolean button){
+  public void cargoPull(Boolean button){ //sucks cargo in
     if (button) {
       cargoLeft.set(1); //make other side negative if this outtakes instead of intakes
       cargoRight.set(-1);

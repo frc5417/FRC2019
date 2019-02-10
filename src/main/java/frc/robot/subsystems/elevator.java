@@ -74,16 +74,16 @@ public class elevator extends Subsystem {
     liftPID.setReference(setPoint, ControlType.kPosition);
   }
 
-  public void liftStage(Boolean button){
+  public void liftStage(Boolean button){ 
     if (button){
-      setPoint += 1;
+      setPoint += .1; 
     }
 
   }
 
   public void dropStage(Boolean button){
     if (button){
-      setPoint -= 1;
+      setPoint -= .1;
     }
   }
 }
