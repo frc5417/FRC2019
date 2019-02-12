@@ -92,6 +92,13 @@ AnalogInput sensorLeft = new AnalogInput(1);
 
   }
 
+  public void arcadeDrive(Double y2, Double y1, Double x){
+    driveRightMaster.set(ControlMode.Velocity, (((y1)+(-y2)+(x))/2) * -5000);
+
+
+    driveLeftMaster.set(ControlMode.Velocity, (((y1)+(-y2)-(x))/2) * 5000);
+  }
+
   public void driveStraight(Boolean button, Double throttle){
     if (button){
     driveLeftMaster.set(ControlMode.Velocity, throttle * 1500);

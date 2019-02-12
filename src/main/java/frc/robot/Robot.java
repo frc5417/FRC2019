@@ -67,6 +67,7 @@ public class Robot extends TimedRobot {
     lift = new elevator();
     hatchIntake = new hatchIntake();
 
+
   }
 
 
@@ -98,6 +99,7 @@ public class Robot extends TimedRobot {
     m_autoSelected = m_chooser.getSelected();
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
+
   }
 
   /**
@@ -119,22 +121,34 @@ public class Robot extends TimedRobot {
   /**
    * This function is called periodically during operator control.
    */
+  double rightSpeed;
+  double leftSpeed;
 
 
   @Override
   public void teleopPeriodic() {
+    SmartDashboard.putData(drive); //displaying subsystems on dashboard
+    SmartDashboard.putData(lift);
+    SmartDashboard.putData(hatchIntake);
+    SmartDashboard.putNumber("Lift Set Point", lift.getSetPoint());
 
-   lift.liftLoop(); //runs elevator pid loop
-   hatchIntake.hatchIntakeloop(); //runs hatch state loop
+    lift.liftLoop();
+    hatchIntake.hatchIntakeloop();
 
-    drive.SetPower(dController.getRawAxis(1), dController.getRawAxis(5)); //left Y axis and Right y axis on drive controller
+    drive.SetPower(dController.getRawAxis(1), dController.getRawAxis(5));
+    drive.squareUp(dController.getRawButton(3));//X
 
-    drive.squareUp(dController.getRawButton(3)); //x on drive controller
+    hatchIntake.cycleHatch(dController.getRawButtonPressed(1)); //A
+    hatchIntake.zeroIntake(dController.getRawButton(2)); //B
 
-    lift.liftStage(dController.getRawButton(1)); //A on drive controller
+    lift.elevatorAnalog(mController.getRawAxis(1)); //Manip left Y axis
+    lift.upHatch(mController.getRawButtonPressed(6)); //manipulaotr RB
+    lift.upBall(mController.getRawButtonPressed(5)); //manip LB
+    lift.floorLift(mController.getRawButtonPressed(8));//Manip select
+    lift.downStage(mController.getRawButtonPressed(7));//manip start
 
-    lift.dropStage(dController.getRawButton(2));//B on drive controller
-    
+    //drive.driveStraight(dController.getRawButton(4), dController.getRawAxis(1));
+
 
 
   }
