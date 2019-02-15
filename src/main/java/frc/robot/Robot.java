@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
   //Defining object variables (naming subsystems)
   public static Joystick mController;
   public static Joystick dController;
-  public static frc.robot.subsystems.driveTrain drive;
+  //public static frc.robot.subsystems.driveTrain drive;
   public static hatchIntake hatchIntake;
   public static cargoIntake cargoIntake;
   public static elevator lift;
@@ -63,7 +63,7 @@ public class Robot extends TimedRobot {
 
     mController = new Joystick(1);
     dController = new Joystick(0);
-    drive = new driveTrain();
+    //drive = new driveTrain();
     lift = new elevator();
     hatchIntake = new hatchIntake();
 
@@ -127,25 +127,27 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    SmartDashboard.putData(drive); //displaying subsystems on dashboard
+    //SmartDashboard.putData(drive); //displaying subsystems on dashboard
     SmartDashboard.putData(lift);
     SmartDashboard.putData(hatchIntake);
-    SmartDashboard.putNumber("Lift Set Point", lift.getSetPoint());
 
-    lift.liftLoop();
+    //lift.liftLoopBeta(mController.getRawAxis(1));
     hatchIntake.hatchIntakeloop();
 
-    drive.SetPower(dController.getRawAxis(1), dController.getRawAxis(5));
-    drive.squareUp(dController.getRawButton(3));//X
+    //drive.SetPower(dController.getRawAxis(1), dController.getRawAxis(5));
+    //drive.squareUp(dController.getRawButton(3));//X
 
     hatchIntake.cycleHatch(dController.getRawButtonPressed(1)); //A
     hatchIntake.zeroIntake(dController.getRawButton(2)); //B
 
-    lift.elevatorAnalog(mController.getRawAxis(1)); //Manip left Y axis
-    lift.upHatch(mController.getRawButtonPressed(6)); //manipulaotr RB
-    lift.upBall(mController.getRawButtonPressed(5)); //manip LB
-    lift.floorLift(mController.getRawButtonPressed(8));//Manip select
-    lift.downStage(mController.getRawButtonPressed(7));//manip start
+    //lift.changeHeight(mController.getRawButton(1), mController.getRawButton(2));//manip A and B
+    lift.analogLift(mController.getRawAxis(1));
+    lift.printLiftSensor();
+    lift.zeroLift(SmartDashboard.getBoolean("DB/Button 0", true));
+    // lift.upHatch(mController.getRawButtonPressed(6)); //manipulaotr RB
+    // lift.upBall(mController.getRawButtonPressed(5)); //manip LB
+    // lift.floorLift(mController.getRawButtonPressed(8));//Manip select
+    // lift.downStage(mController.getRawButtonPressed(7));//manip start
 
     //drive.driveStraight(dController.getRawButton(4), dController.getRawAxis(1));
 

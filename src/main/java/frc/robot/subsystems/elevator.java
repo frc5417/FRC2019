@@ -7,13 +7,15 @@
 
 package frc.robot.subsystems;
 
-//import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+
 
 
 
@@ -21,139 +23,103 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * Add your docs here.
  */
 public class elevator extends Subsystem {
-
-  //private CANEncoder neoEncoder;
-  private CANPIDController liftPID; //declaring variable for PID controller
-  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput; //declaring PID constants
-
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  CANSparkMax liftMaster = new CANSparkMax(7, MotorType.kBrushless); //CAN Id 6
-  CANSparkMax liftSlave = new CANSparkMax(8, MotorType.kBrushed); //CAN Id 7
+  TalonSRX liftMaster = new TalonSRX(3);
+  TalonSRX liftSlave = new TalonSRX(4);
+  int liftState = 0; //init variable for state of liftMaster
+  int setPoint = 0; //used for beta testing lift
 
-  double setPoint = 0;
-  int liftState = 0;
-  Boolean firstHatchPress = false;
+  //the values below need to be changed for final robot, they are in encoder rotation units, 
+  //to find values, rotate to the correct point, and find encoder value, and input it in the correct spot 
 
-  static int liftZero = 0; // Lower lift to the lower most position
-  static int liftHatch1 = 0;// Raise lift to first hatch position
-  static int liftHatch2 = 0;// Raise lift to second hatch position
-  static int liftHatch3 = 0;// Raise lift to third hatch position
-  static int liftCargo1 = 0;// Raise lift to first cargo position
-  static int liftCargo2 = 0;// Raise lift to second cargo position
-  static int liftCargo3 = 0;// Raise lift to first hatch position
+  static int floorPos = 0; //position in nuetral state
+  static int hatch1Pos = 0; //position in holding hatch state
+  static int hatch2Pos = 0; //position in pushing hatch state 
+  static int hatch3Pos = 0;
+  static int cargo1Pos = 0;
+  static int cargo2Pos = 0;
+  static int cargo3Pos = 0;
 
+  /*hatch liftMaster has 3 states:
 
+  0:neutral state, not holding or pushing
+  1:holding hatch
+  2:pushing down hatch
 
-  @Override
-  public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
-    setPoint = 0;
-
-    //neoEncoder = liftMaster.getEncoder(); //assign encoder variable from master NEO 
-
-    liftPID = liftMaster.getPIDController(); //assign name to PID contoller
-
-    liftSlave.follow(liftMaster); //tell slave motor to follow master moter
-
-        // PID coefficients
-        kP = 0.05; 
-        kI = 0;
-        kD = 1; 
-        kIz = 0; 
-        kFF = 0; 
-        kMaxOutput = 1; 
-        kMinOutput = -1;
-    
-        // set PID coefficients
-        liftPID.setP(kP);
-        liftPID.setI(kI);
-        liftPID.setD(kD);
-        liftPID.setIZone(kIz);
-        liftPID.setFF(kFF);
-        liftPID.setOutputRange(kMinOutput, kMaxOutput);
-
-  }
-  public void liftloop(){
-    switch(liftState){ //find value of hatchIntakeState and :
-      case 0: //if state is 0
-          setPoint = liftZero; //sets intake to nuetralPos
-          break;
-      case 1 : //if state is 1
-          setPoint = liftHatch1;
-          break;
-      case 2 : //if state is 2
-          setPoint = liftCargo1;
-          break;
-      case 3 : //if state is 3
-          setPoint = liftHatch2;
-          break;
-      case 4 : //if state is 4
-          setPoint = liftCargo2;
-          break;
-      case 5 : //if state is 5
-          setPoint = liftHatch3;
-          break;
-      case 6 : //if state is 6
-          setPoint = liftCargo3;
-          break;
-      default :  //if state is unreadable (someone broke something)
-          liftMaster.set(0); //if liftState is null or non [0-6], turn motor off
-          System.out.println("Lift shut down, liftState: " + liftState); 
-    }
-  }
-
-  public void upHatch(Boolean button_released){
-    if (button_released){
-      if (firstHatchPress){
-        firstHatchPress = true; //state that we have gone up one 
-        liftState += 1; //lifts to first hatch stage
-      }
-      else if (liftState == 5){
-        // do nothing
-      }
-    else{
-      liftState += 2; //lifts 1 stage
-    }
-    }
-  }
-
-  public void upBall(Boolean button_released){
-    if(button_released){
-      liftState += 2; //lifts 1 stage
-    }
-  }
-
-  public void downStage(Boolean button_released){
-    if (button_released){
-      liftState -= 2; //drops 1 stage 
-    }
-  }
-
-  public void floorLift(Boolean button_released){
-    if(button_released){
-      liftState = 0; //drops lift to the floor
-      firstHatchPress = false; //resets hatch first press
-    }
-  }
+  to change the state of the hatch, change this value to 0, 1, or 2
+  */
 
   
-  public double getSetPoint() {
-    return setPoint;
-  }
+  @Override
+  public void initDefaultCommand() { //default command
+    liftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative); //init encoder
+    liftMaster.setNeutralMode(NeutralMode.Brake); //sets motor to break mode
+    liftSlave.follow(liftMaster); //lift slave follows lift master
+    liftMaster.setSelectedSensorPosition(0); // zero sensor
+    liftMaster.setSensorPhase(true);
 
-  public int getLiftState() {
-    return liftState;
-  }
 
-  public void liftLoop(){
-    liftPID.setReference(setPoint, ControlType.kPosition); //sets lift to setPoint
   }
+  
 
-  public void elevatorAnalog(Double analogInput){
-    setPoint += analogInput;
-  }
+    public void liftLoopBeta(Double input){
+      liftMaster.set(ControlMode.PercentOutput, input);
+    }
+
+    public void changeHeight(Boolean button_one, Boolean button_two){
+      if (button_one){
+        liftMaster.set(ControlMode.Position, 1000);
+      }
+      else {
+        liftMaster.set(ControlMode.Position, -0);
+
+      }
+    }
+
+    public void printLiftSensor(){
+      System.out.println(liftMaster.getSelectedSensorPosition());
+    }
+
+    public void zeroLift(Boolean button){
+      if (button){
+        liftMaster.setSelectedSensorPosition(0); // zero sensor
+
+      }
+    }
+
+    public void analogLift(Double input){
+      liftMaster.set(ControlMode.PercentOutput,input * .1);
+    }
+
+  /* public void liftLoop(){
+    switch(liftState){ //find value of hatchliftMasterState and :
+      case 0: //if state is 0
+          liftMaster.set(ControlMode.Position, floorPos); //sets liftMaster to nuetralPos
+          break;
+      case 1 : //if state is 1
+          liftMaster.set(ControlMode.Position, hatch1Pos); //sets liftMaster to holdPos
+          break;
+      case 2 : //if state is 2
+          liftMaster.set(ControlMode.Position, cargo1Pos); //sets liftMaster to pushPos
+          break;
+      case 3 : //if state is 3
+          liftMaster.set(ControlMode.Position, hatch2Pos); //sets liftMaster to pushPos
+          break;
+      case 4 : //if state is 4
+          liftMaster.set(ControlMode.Position, cargo2Pos); //sets liftMaster to pushPos
+          break;
+      case 5 : //if state is 5
+          liftMaster.set(ControlMode.Position, hatch3Pos); //sets liftMaster to pushPos
+          break;
+      case 6 : //if state is 6
+          liftMaster.set(ControlMode.Position, cargo3Pos); //sets liftMaster to pushPos
+          break;
+      default :  //if state is unreadable (someone broke something)
+          liftMaster.set(ControlMode.PercentOutput, 0); //if hatchliftMasterState is null or non [0-2], turn motor off
+          System.out.println("lift shut down, liftState: " + liftState); 
+    }
+  } 
+  */
 }
-
