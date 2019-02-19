@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.constant;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -26,15 +27,15 @@ public class elevator extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  TalonSRX liftMaster = new TalonSRX(3);
-  TalonSRX liftSlave = new TalonSRX(4);
+  TalonSRX liftMaster = new TalonSRX(constant.liftMaster);
+  TalonSRX liftSlave = new TalonSRX(constant.liftSlave);
   int liftState = 0; //init variable for state of liftMaster
   int setPoint = 0; //used for beta testing lift
 
   //the values below need to be changed for final robot, they are in encoder rotation units, 
   //to find values, rotate to the correct point, and find encoder value, and input it in the correct spot 
 
-  static int floorPos = 0; //position in nuetral state
+  static int floorPos = 0;  //position in nuetral state
   static int hatch1Pos = 0; //position in holding hatch state
   static int hatch2Pos = 0; //position in pushing hatch state 
   static int hatch3Pos = 0;
@@ -54,6 +55,11 @@ public class elevator extends Subsystem {
   
   @Override
   public void initDefaultCommand() { //default command
+    //setting pid constants
+    liftMaster.config_kP(0, constant.liftP);
+    liftMaster.config_kI(0, constant.liftI);
+    liftMaster.config_kD(0, constant.liftD);
+
     liftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative); //init encoder
     liftMaster.setNeutralMode(NeutralMode.Brake); //sets motor to break mode
     liftSlave.follow(liftMaster); //lift slave follows lift master
@@ -61,13 +67,12 @@ public class elevator extends Subsystem {
     liftMaster.setSensorPhase(true);
 
 
+
+
   }
   
 
-    public void liftLoopBeta(Double input){
-      liftMaster.set(ControlMode.PercentOutput, input);
-    }
-
+    //test code for positioning 
     public void changeHeight(Boolean button_one, Boolean button_two){
       if (button_one){
         liftMaster.set(ControlMode.Position, 1000);
@@ -77,21 +82,24 @@ public class elevator extends Subsystem {
 
       }
     }
-
+//prints lift position
     public void printLiftSensor(){
       System.out.println(liftMaster.getSelectedSensorPosition());
     }
-
+//zeros lift with driver station button
     public void zeroLift(Boolean button){
       if (button){
         liftMaster.setSelectedSensorPosition(0); // zero sensor
 
       }
     }
-
+//test percent output for lift
     public void analogLift(Double input){
-      liftMaster.set(ControlMode.PercentOutput,input * .1);
+      liftMaster.set(ControlMode.PercentOutput,input * .4);
     }
+
+
+    // final lift loop 
 
   /* public void liftLoop(){
     switch(liftState){ //find value of hatchliftMasterState and :

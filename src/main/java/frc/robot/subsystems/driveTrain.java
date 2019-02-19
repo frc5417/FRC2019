@@ -9,14 +9,14 @@ package frc.robot.subsystems;
 
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
-import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.Solenoid;
+// import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
-//import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-//import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import frc.robot.constant;
 
 
 /**
@@ -25,45 +25,39 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class driveTrain extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-TalonSRX driveLeftMaster = new TalonSRX(0);
-TalonSRX driveLeftSlave1 = new TalonSRX(1);
-TalonSRX driveLeftSlave2 = new TalonSRX(2);
 
-TalonSRX driveRightMaster = new TalonSRX(3);
-TalonSRX driveRightSlave1 = new TalonSRX(4);
-TalonSRX driveRightSlave2 = new TalonSRX(5);
+//left side init
+TalonSRX driveLeftMaster = new TalonSRX(constant.driveLeftMaster);
+VictorSPX driveLeftSlave1 = new VictorSPX(constant.driveLeftSlave1);
+VictorSPX driveLeftSlave2 = new VictorSPX(constant.driveLeftSlave2);
+//right side init
+TalonSRX driveRightMaster = new TalonSRX(constant.driveRightMaster);
+VictorSPX driveRightSlave1 = new VictorSPX(constant.driveRightSlave1);
+VictorSPX driveRightSlave2 = new VictorSPX(constant.driveRightSlave2);
+//climber solonoid init
+Solenoid climberSolenoid = new Solenoid(constant.climberSolenoid);
 
-AnalogInput sensorRight = new AnalogInput(0);
-AnalogInput sensorLeft = new AnalogInput(1);
 
 
-//test
+
+
+
 
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
-     driveLeftSlave1.set(ControlMode.Follower, driveLeftMaster.getDeviceID());
-     driveLeftSlave2.set(ControlMode.Follower, driveLeftMaster.getDeviceID());
 
-    //  driveLeftMaster.setInverted(true);
-    //  driveLeftSlave1.setInverted(true);
-    //  driveLeftSlave2.setInverted(true);
-    //  driveLeftMaster.setSensorPhase(false);
 
-    //  driveRightMaster.setInverted(false);
-    //  driveRightSlave1.setInverted(true);
-    //  driveRightSlave2.setInverted(true);
-    //  driveRightMaster.setSensorPhase(true);
-
-     driveRightSlave1.set(ControlMode.Follower, driveRightMaster.getDeviceID());
+     driveRightSlave1.set(ControlMode.Follower, driveRightMaster.getDeviceID()); //setting right side follower mode 
      driveRightSlave2.set(ControlMode.Follower, driveRightMaster.getDeviceID());
+     driveRightMaster.set(ControlMode.PercentOutput, 0); //Change control mode of talon, default is PercentOutput (-1.0 to 1.0)
+     //driveRightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 30); //Set the feedback device that is hooked up to the talon
 
-      driveRightMaster.set(ControlMode.Velocity, 0); //Change control mode of talon, default is PercentVbus (-1.0 to 1.0)
-      driveRightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 30); //Set the feedback device that is hooked up to the talon
-
-      driveLeftMaster.set(ControlMode.Velocity, 0); //Change control mode of talon, default is PercentVbus (-1.0 to 1.0)
-      driveLeftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 30); //Set the feedback device that is hooked up to the talon
+     driveLeftSlave1.set(ControlMode.Follower, driveLeftMaster.getDeviceID());//setting left side follower mode
+     driveLeftSlave2.set(ControlMode.Follower, driveLeftMaster.getDeviceID());
+     driveLeftMaster.set(ControlMode.PercentOutput, 0); //Change control mode of talon, default is PercentOutput (-1.0 to 1.0)
+     //driveLeftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 30); //Set the feedback device that is hooked up to the talon
 
 		
 		/* Set Neutral Mode */
@@ -75,67 +69,56 @@ AnalogInput sensorLeft = new AnalogInput(1);
     driveRightSlave1.setNeutralMode(NeutralMode.Coast);
     driveRightSlave2.setNeutralMode(NeutralMode.Coast);
 		
-		/** Feedback Sensor Configuration */
 		
-		/* Configure the left Talon's selected sensor to a Quad Encoder*/
+    /* Configure the left Talon's selected sensor to a Quad Encoder*/
+    
+    climberSolenoid.set(false); //turning Climber solenoid off (praying )
+
 		
   }
 
-
+ //main drive function
   public void SetPower(double leftPower, double rightPower)
   {
     // m_drive.tankDrive(rightPower, leftPower);
-    driveRightMaster.set(ControlMode.Velocity, rightPower * -5000);
+    driveRightMaster.set(ControlMode.PercentOutput, -rightPower);
 
 
-    driveLeftMaster.set(ControlMode.Velocity, leftPower * 5000);
+    driveLeftMaster.set(ControlMode.PercentOutput, leftPower);
 
   }
-
+// fun to play with not to eat arcade drive (kinda works kinda wonk)
   public void arcadeDrive(Double y2, Double y1, Double x){
-    driveRightMaster.set(ControlMode.Velocity, (((y1)+(-y2)+(x))/2) * -5000);
+    driveRightMaster.set(ControlMode.PercentOutput, -(((y1)+(-y2)+(x))/2));
 
 
-    driveLeftMaster.set(ControlMode.Velocity, (((y1)+(-y2)-(x))/2) * 5000);
+    driveLeftMaster.set(ControlMode.PercentOutput, (((y1)+(-y2)-(x))/2));
   }
-
-  public void driveStraight(Boolean button, Double throttle){
-    if (button){
-    driveLeftMaster.set(ControlMode.Velocity, throttle * 1500);
-    driveRightMaster.set(ControlMode.Velocity, throttle * -1500);
-    }
-    else {
-      driveLeftMaster.set(ControlMode.Velocity, 0);
-        driveRightMaster.set(ControlMode.Velocity, 0);
-    }
-      
-  
-    
-  }
-
-  public void squareUp(boolean button){
-    if (button){
-      if (sensorRight.getValue() < sensorLeft.getValue()){
-        driveRightMaster.set(ControlMode.Velocity, 1500);
-      }
-      else if (sensorLeft.getValue() < sensorRight.getValue()){
-        driveLeftMaster.set(ControlMode.Velocity, -1500);
-      }
-      else if ((sensorRight.getValue() - sensorLeft.getValue() < 2) && (sensorRight.getValue() - sensorLeft.getValue() > -8)){
-        driveLeftMaster.set(ControlMode.Velocity, 1500);
-        driveRightMaster.set(ControlMode.Velocity, -1500);
-
-
-      }
+//climber release
+  public void releaseTheKraken(Boolean button1, Boolean button2){
+    if (button1 && button2){
+      climberSolenoid.set(true);
     }
   }
 
-  public void printVelocity(Boolean button){
-    // System.out.println("Right encoder");
-    // System.out.println(driveRightMaster.getSelectedSensorVelocity());
-    // System.out.println("left encoder");
-    // System.out.println(driveLeftMaster.getSelectedSensorVelocity());
-  }
+  //Code that squares up with two range sensors
+  // public void squareUp(boolean button){
+  //   if (button){
+  //     if (sensorRight.getValue() < sensorLeft.getValue()){
+  //       driveRightMaster.set(ControlMode.Velocity, 1500);
+  //     }
+  //     else if (sensorLeft.getValue() < sensorRight.getValue()){
+  //       driveLeftMaster.set(ControlMode.Velocity, -1500);
+  //     }
+  //     else if ((sensorRight.getValue() - sensorLeft.getValue() < 2) && (sensorRight.getValue() - sensorLeft.getValue() > -8)){
+  //       driveLeftMaster.set(ControlMode.Velocity, 1500);
+  //       driveRightMaster.set(ControlMode.Velocity, -1500);
+
+
+  //     }
+  //   }
+  // }
+
 
   
 }
