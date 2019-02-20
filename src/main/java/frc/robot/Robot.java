@@ -57,14 +57,19 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
     
-    CameraServer.getInstance().startAutomaticCapture(0);
+    CameraServer.getInstance().startAutomaticCapture(0);//Camera 1 init
+    CameraServer.getInstance().startAutomaticCapture(1); //camera 2 init
+
+    
     
 
-    mController = new Joystick(1);
-    dController = new Joystick(0);
-    drive = new driveTrain();
-    //lift = new elevator();
+    mController = new Joystick(1);//manip init
+    dController = new Joystick(0);//driver init
+
+    drive = new driveTrain();//subsystem init (runs default commands)
+    lift = new elevator();
     hatchIntake = new hatchIntake();
+    cargoIntake = new cargoIntake();
 
 
   }
@@ -113,6 +118,7 @@ public class Robot extends TimedRobot {
       case kDefaultAuto:
       default:
         // Put default auto code here
+        teleopPeriodic(); //runs teleop code in auton
         break;
     }
   }
@@ -124,11 +130,27 @@ public class Robot extends TimedRobot {
   double leftSpeed;
 
 
-  @Override
+  @Overridex
   public void teleopPeriodic() {
  
 
-    drive.SetPower(dController.getRawAxis(1), dController.getRawAxis(5));
+    drive.SetPower(dController.getRawAxis(1), dController.getRawAxis(5)); //drive drive train
+
+    lift.analogLift(mController.getRawAxis(1)); //manip left stick Y axis
+    lift.zeroLift(SmartDashboard.putBoolean("DB/Button 0", true));// dash button 0 to zero lift encoder
+
+    hatchIntake.cycleHatch(mController.getRawButtonReleased(1)); //manip A
+    hatchIntake.pushHatch(mController.getRawButtonReleased(2)); //manip B
+
+    cargoIntake.cargoFullSend(mController.getDirectionDegrees() == 0); //Manip D-pad Up
+    cargoIntake.cargoRightHook(mController.getDirectionDegrees() == 90); //Manip D-pad Right
+    cargoIntake.cargoPull(mController.getDirectionDegrees() == 180); //Manip D-pad Down
+    cargoIntake.cargoLeftHook(mController.getDirectionDegrees() == 270); //Manip D-pad Left
+
+    SmartDashboard.putString("DB/String 0", Integer.toString(lift.getLiftSensor())); //prints encoder pos to dash
+    
+
+
    
 
 

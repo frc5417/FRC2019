@@ -83,8 +83,8 @@ public class elevator extends Subsystem {
       }
     }
 //prints lift position
-    public void printLiftSensor(){
-      System.out.println(liftMaster.getSelectedSensorPosition());
+    public int getLiftSensor(){
+      return liftMaster.getSelectedSensorPosition();
     }
 //zeros lift with driver station button
     public void zeroLift(Boolean button){
