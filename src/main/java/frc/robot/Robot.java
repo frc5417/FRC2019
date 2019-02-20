@@ -39,6 +39,7 @@ public class Robot extends TimedRobot {
   public static hatchIntake hatchIntake;
   public static cargoIntake cargoIntake;
   public static elevator lift;
+  public static double tapeYaw;
   
 
 
@@ -57,14 +58,20 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
     
-    CameraServer.getInstance().startAutomaticCapture(0);
+    CameraServer.getInstance().startAutomaticCapture(0);//Camera 1 init
+    CameraServer.getInstance().startAutomaticCapture(1); //camera 2 init
+
+    
     
 
-    mController = new Joystick(1);
-    dController = new Joystick(0);
-    drive = new driveTrain();
-    //lift = new elevator();
+    dController = new Joystick(0);//driver init
+    mController = new Joystick(1);//manip init
+
+
+    drive = new driveTrain();//subsystem init (runs default commands)
+    lift = new elevator();
     hatchIntake = new hatchIntake();
+    cargoIntake = new cargoIntake();
 
 
   }
@@ -113,6 +120,7 @@ public class Robot extends TimedRobot {
       case kDefaultAuto:
       default:
         // Put default auto code here
+        teleopPeriodic(); //runs teleop code in auton
         break;
     }
   }
@@ -126,14 +134,22 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
- 
 
-    drive.SetPower(dController.getRawAxis(1), dController.getRawAxis(5));
-   
+     drive.SetPower(dController.getRawAxis(1), dController.getRawAxis(5)); //drive drive train
 
+     lift.analogLift(-mController.getRawAxis(2)+mController.getRawAxis(3)); //manip left stick Y axis
+     lift.zeroLift(SmartDashboard.putBoolean("DB/Button 0", true)); // dash button 0 to zero lift encoder
 
+     //hatchIntake.driveHatch(mController.getRawButton(5), mController.getRawButton(6));
+     //hatchIntake.zeroIntake(SmartDashboard.putBoolean("DB/Button 1", true));
+    hatchIntake.cycleHatch(mController.getRawButtonReleased(1), mController.getRawButtonReleased(2), mController.getRawButtonReleased(4)); //manip A
 
+     cargoIntake.pivotIntake(mController.getRawButton(3));
+     cargoIntake.cargoLoop(mController.getPOV());
+     System.out.println(hatchIntake.getHatchState());
 
+     SmartDashboard.putString("DB/String 0", "Lift Encoder @:" + Integer.toString(lift.getLiftSensor())); //prints encoder pos to dash
+     SmartDashboard.putString("DB/String 1", ("Lift position:" + lift.getLiftPos())); //prints lift pos to dash
   }
 
   /**

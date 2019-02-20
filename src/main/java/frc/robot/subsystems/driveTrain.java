@@ -51,12 +51,10 @@ Solenoid climberSolenoid = new Solenoid(constant.climberSolenoid);
 
      driveRightSlave1.set(ControlMode.Follower, driveRightMaster.getDeviceID()); //setting right side follower mode 
      driveRightSlave2.set(ControlMode.Follower, driveRightMaster.getDeviceID());
-     driveRightMaster.set(ControlMode.PercentOutput, 0); //Change control mode of talon, default is PercentOutput (-1.0 to 1.0)
      //driveRightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 30); //Set the feedback device that is hooked up to the talon
 
      driveLeftSlave1.set(ControlMode.Follower, driveLeftMaster.getDeviceID());//setting left side follower mode
      driveLeftSlave2.set(ControlMode.Follower, driveLeftMaster.getDeviceID());
-     driveLeftMaster.set(ControlMode.PercentOutput, 0); //Change control mode of talon, default is PercentOutput (-1.0 to 1.0)
      //driveLeftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 30); //Set the feedback device that is hooked up to the talon
 
 		
@@ -70,7 +68,6 @@ Solenoid climberSolenoid = new Solenoid(constant.climberSolenoid);
     driveRightSlave2.setNeutralMode(NeutralMode.Coast);
 		
 		
-    /* Configure the left Talon's selected sensor to a Quad Encoder*/
     
     climberSolenoid.set(false); //turning Climber solenoid off (praying )
 
@@ -82,11 +79,17 @@ Solenoid climberSolenoid = new Solenoid(constant.climberSolenoid);
   {
     // m_drive.tankDrive(rightPower, leftPower);
     driveRightMaster.set(ControlMode.PercentOutput, -rightPower);
+    driveRightSlave1.set(ControlMode.PercentOutput, -rightPower);
+    driveRightSlave2.set(ControlMode.PercentOutput, -rightPower);
 
 
     driveLeftMaster.set(ControlMode.PercentOutput, leftPower);
+    driveLeftSlave1.set(ControlMode.PercentOutput, leftPower);
+    driveLeftSlave2.set(ControlMode.PercentOutput, leftPower);
+
 
   }
+
 // fun to play with not to eat arcade drive (kinda works kinda wonk)
   public void arcadeDrive(Double y2, Double y1, Double x){
     driveRightMaster.set(ControlMode.PercentOutput, -(((y1)+(-y2)+(x))/2));
@@ -94,6 +97,7 @@ Solenoid climberSolenoid = new Solenoid(constant.climberSolenoid);
 
     driveLeftMaster.set(ControlMode.PercentOutput, (((y1)+(-y2)-(x))/2));
   }
+
 //climber release
   public void releaseTheKraken(Boolean button1, Boolean button2){
     if (button1 && button2){
@@ -102,6 +106,7 @@ Solenoid climberSolenoid = new Solenoid(constant.climberSolenoid);
   }
 
   //Code that squares up with two range sensors
+
   // public void squareUp(boolean button){
   //   if (button){
   //     if (sensorRight.getValue() < sensorLeft.getValue()){

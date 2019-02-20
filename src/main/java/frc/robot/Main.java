@@ -11,7 +11,7 @@ import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
+//import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 /**
  * Do NOT add any static variables to this class, or any initialization at all.
@@ -28,12 +28,7 @@ public final class Main {
    * <p>If you change your main robot class, change the parameter type.
    */
   public static void main(String... args) {
-    NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    edu.wpi.first.networktables.NetworkTable table = inst.getTable("ChickenVision");
-    NetworkTableEntry xEntry = table.getEntry("tapeYaw");
-    xEntry.addListener (event -> {
-      System.out.println("y changed value: " + event.value.getValue());
-    }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
     RobotBase.startRobot(Robot::new);
   }
 }

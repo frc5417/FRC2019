@@ -70,56 +70,41 @@ public class cargoIntake extends Subsystem {
 //all following commands are button holds
 
 //hooks cargo left
-  public void cargoLeftHook(Boolean button){ //shoots ball to the left
-    if (button) {
-      cargoLeft.set(ControlMode.PercentOutput,-.4);
-      cargoRight.set(ControlMode.PercentOutput,-1);
-    }
-    else{
-      stopCargoIntake();
-    }
-  }
-  //hooks cargo to the right
-  public void cargoRightHook(Boolean button){ //shoots ball to the right
-    if (button) {
-      cargoLeft.set(ControlMode.PercentOutput,-1);
-      cargoRight.set(ControlMode.PercentOutput,-.4);
-    }
-    else{
-      stopCargoIntake();
-    }
-  }
-//shoots cargo straight out
-  public void cargoFullSend(Boolean button){ //shoots cargo straight out
-    if (button) {
-      cargoLeft.set(ControlMode.PercentOutput, 1);
+
+
+public void cargoLoop(Integer input){
+  switch (input){
+    case (0):
+      cargoLeft.set(ControlMode.PercentOutput, -1);
       cargoRight.set(ControlMode.PercentOutput, 1);
-    }
-    else{
-      stopCargoIntake();
-    }
-    System.out.println("KOBE!!");
-  }
-
-
-//sucks cargo in
-  public void cargoPull(Boolean button){ //sucks cargo in
-    if (button) {
+      break;
+    case (90):
       cargoLeft.set(ControlMode.PercentOutput,-1);
+      cargoRight.set(ControlMode.PercentOutput,.4);
+      break;
+    case (180):
+      cargoLeft.set(ControlMode.PercentOutput,1);
       cargoRight.set(ControlMode.PercentOutput,-1);
 
       cargoFloorLeft.set(ControlMode.PercentOutput, -1);
-      cargoFloorRight.set(ControlMode.PercentOutput, -1);
-
-      if (!floorLimit.get()){
-        cargoFloorPivot.set(ControlMode.PercentOutput, 1);
-      }
-    }
-    else {
+      cargoFloorRight.set(ControlMode.PercentOutput, 1);
+      break;
+    case(270):
+      cargoLeft.set(ControlMode.PercentOutput,-.4);
+      cargoRight.set(ControlMode.PercentOutput,1);
+      break;
+    default:
       stopCargoIntake();
-      if (floorLimit.get()){
-        cargoFloorPivot.set(ControlMode.PercentOutput, -.8);
-      }
+
+  }
+}
+
+  public void pivotIntake(Boolean button){
+    if(button){
+      cargoFloorPivot.set(ControlMode.PercentOutput, 1);
+    }
+    else{
+      cargoFloorPivot.set(ControlMode.PercentOutput, 0);
     }
   }
 

@@ -12,39 +12,41 @@ package frc.robot;
  */
 public class constant {
     //Motor IDs
-    public final static int driveLeftMaster = 7;
-    public final static int driveLeftSlave1 = 5;
-    public final static int driveLeftSlave2 = 6;
-    public final static int driveRightMaster = 9;
-    public final static int driveRightSlave1 = 10;
-    public final static int driveRightSlave2 = 11;
-    public final static int liftMaster = 8;
-    public final static int liftSlave = 12;
-    public final static int cargoFloorIntakeLeft = 13;
-    public final static int cargoFloorIntakeRight = 14;
-    public final static int cargoFloorIntakePivot = 3;
-    public final static int cargoIntakeLeft = 1;
-    public final static int cargoIntakeRight = 2;
-    public final static int hatchIntake = 4;
+    public final static int driveLeftMaster = 7;//talon
+    public final static int driveLeftSlave1 = 5;//victor
+    public final static int driveLeftSlave2 = 6;//victor
+    public final static int driveRightMaster = 9;//
+    public final static int driveRightSlave1 = 10;//
+    public final static int driveRightSlave2 = 11;//
+    public final static int liftMaster = 8;//
+    public final static int liftSlave = 12;//
+    public final static int cargoFloorIntakeLeft = 13;//
+    public final static int cargoFloorIntakeRight = 14;//
+    public final static int cargoFloorIntakePivot = 3;//
+    public final static int cargoIntakeLeft = 1;//
+    public final static int cargoIntakeRight = 2;//
+    public final static int hatchIntake = 4;//
 
     //limit switches
     public final static int hatchZeroSwitch = 0;
     public final static int cargoSenseSwitch = 1;
     public final static int cargoFloorSwitch = 2;
+    public final static int liftTopSwitch = 3;
+    public final static int liftBottomSwitch = 4;
 
     //solonoids
     public final static int climberSolenoid = 0;
 
 
     //liftPID
-    public final static int liftP = 0;
-    public final static int liftI = 0;
-    public final static int liftD = 0;
+    public final static Double liftP = 0.05;
+    public final static Double liftI = 0.0;
+    public final static Double liftD = 0.0;
 
     //hatchPID
-    public final static int hatchP = 0;
-    public final static int hatchI = 0;
-    public final static int hatchD = 0;
+    public final static Double hatchP = 5.0;
+    public final static Double hatchI = 0.0;
+    public final static Double hatchD = 0.0;
 
 
 
