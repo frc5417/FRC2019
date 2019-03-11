@@ -106,6 +106,9 @@ public class Robot extends TimedRobot {
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
 
+    hatchIntake.zeroIntake();   //DONT FORGET U DID THIS
+    lift.zeroLift();
+
   }
 
   /**
@@ -137,19 +140,26 @@ public class Robot extends TimedRobot {
 
      drive.SetPower(dController.getRawAxis(1), dController.getRawAxis(5)); //drive drive train
 
-     lift.analogLift(-mController.getRawAxis(2)+mController.getRawAxis(3)); //manip left stick Y axis
-     lift.zeroLift(SmartDashboard.putBoolean("DB/Button 0", true)); // dash button 0 to zero lift encoder
+     lift.analogLift((-mController.getRawAxis(2))+mController.getRawAxis(3)); //manip left stick Y axis
+     //lift.getLimitSwitches();
+     //lift.liftLoop();
+     //lift.floorReturn(mController.getRawButton(7));
+     //lift.changeStage(mController.getRawButtonReleased(5), mController.getRawButtonReleased(6));
 
+    //lift.changeHeight(mController.getRawButtonReleased(5),mController.getRawButtonReleased(6));
      //hatchIntake.driveHatch(mController.getRawButton(5), mController.getRawButton(6));
      //hatchIntake.zeroIntake(SmartDashboard.putBoolean("DB/Button 1", true));
-    hatchIntake.cycleHatch(mController.getRawButtonReleased(1), mController.getRawButtonReleased(2), mController.getRawButtonReleased(4)); //manip A
+     hatchIntake.cycleHatch(mController.getRawButtonReleased(1), mController.getRawButtonReleased(2), mController.getRawButtonReleased(4)); //manip A
+    
 
      cargoIntake.pivotIntake(mController.getRawButton(3));
      cargoIntake.cargoLoop(mController.getPOV());
-     System.out.println(hatchIntake.getHatchState());
+
+    // System.out.println(hatchIntake.getHatchState());
 
      SmartDashboard.putString("DB/String 0", "Lift Encoder @:" + Integer.toString(lift.getLiftSensor())); //prints encoder pos to dash
-     SmartDashboard.putString("DB/String 1", ("Lift position:" + lift.getLiftPos())); //prints lift pos to dash
+     //System.out.println(lift.getLiftSensor());
+     //SmartDashboard.putString("DB/String 1", ("Lift position:" + lift.getLiftPos())); //prints lift pos to dash
   }
 
   /**

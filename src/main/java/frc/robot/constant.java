@@ -31,15 +31,15 @@ public class constant {
     public final static int hatchZeroSwitch = 0;
     public final static int cargoSenseSwitch = 1;
     public final static int cargoFloorSwitch = 2;
-    public final static int liftTopSwitch = 3;
-    public final static int liftBottomSwitch = 4;
+    public final static int liftTopSwitch = 4;
+    public final static int liftBottomSwitch = 3;
 
     //solonoids
     public final static int climberSolenoid = 0;
 
 
     //liftPID
-    public final static Double liftP = 0.05;
+    public final static Double liftP = 0.5;
     public final static Double liftI = 0.0;
     public final static Double liftD = 0.0;
 

@@ -35,7 +35,7 @@ TalonSRX driveRightMaster = new TalonSRX(constant.driveRightMaster);
 VictorSPX driveRightSlave1 = new VictorSPX(constant.driveRightSlave1);
 VictorSPX driveRightSlave2 = new VictorSPX(constant.driveRightSlave2);
 //climber solonoid init
-Solenoid climberSolenoid = new Solenoid(constant.climberSolenoid);
+Solenoid climberSolenoid = new Solenoid(0);
 
 
 
@@ -69,7 +69,7 @@ Solenoid climberSolenoid = new Solenoid(constant.climberSolenoid);
 		
 		
     
-    climberSolenoid.set(false); //turning Climber solenoid off (praying )
+    climberSolenoid.set(true); //turning Climber solenoid off (praying )
 
 		
   }

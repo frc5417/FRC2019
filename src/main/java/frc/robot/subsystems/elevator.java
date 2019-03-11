@@ -24,8 +24,8 @@ public class elevator extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  TalonSRX liftMaster = new TalonSRX(18); //motor controllers
-  VictorSPX liftSlave = new VictorSPX(12);
+  TalonSRX liftMaster = new TalonSRX(constant.liftMaster); //motor controllers
+  VictorSPX liftSlave = new VictorSPX(constant.liftSlave);
 
   DigitalInput topLimit = new DigitalInput(constant.liftTopSwitch); //limit switches
   DigitalInput bottomLimit = new DigitalInput(constant.liftBottomSwitch);
@@ -33,22 +33,21 @@ public class elevator extends Subsystem {
 
   int liftState = 0; //init variable for state of liftMaster
   int setPoint = 0; //used for beta testing lift
-
-  Boolean firstHatchPress = true;
+  int liftStateHatch = 0;
+  Boolean firstCargoPress = true;
 
   //the values below need to be changed for final robot, they are in encoder rotation units, 
   //to find values, rotate to the correct point, and find encoder value, and input it in the correct spot 
 
   static int floorPos = 0;  //position in nuetral state
-  static int hatch1Pos = 0; //position in hatch 1 height
-  static int hatch2Pos = 0; //position in hatch 2 height 
-  static int hatch3Pos = 0; //position in hatch 3 height
-  static int cargo1Pos = 0; //position in cargo 1 height
-  static int cargo2Pos = 0; //position in cargo 2 height
-  static int cargo3Pos = 0; //position in cargo 3 height
+  static int hatch2Pos = 7459; //position in hatch 2 height 
+  static int hatch3Pos = 14155; //position in hatch 3 height
+  static int cargo1Pos = 5100; //position in cargo 1 height
+  static int cargo2Pos = 10917; //position in cargo 2 height
+  static int cargo3Pos = 17507; //position in cargo 3 height
 
   //THE ARRAY BELOW MUST CORRESPOND TO THE SWITCH STATEMENT "liftLoop" TO MAKE ANY SENSE IN THE DRIVER STATION
-  String[] liftPositions = {"floor", "hatch1", "cargo1", "hatch2", "cargo2", "hatch3", "cargo3"};
+  String[] liftPositions = {"floor", "cargo1", "hatch2", "cargo2", "hatch3", "cargo3"};
 
   /*hatch liftMaster has 7 states:
 
@@ -68,6 +67,8 @@ public class elevator extends Subsystem {
     liftMaster.config_kP(0, constant.liftP);
     liftMaster.config_kI(0, constant.liftI);
     liftMaster.config_kD(0, constant.liftD);
+    liftMaster.configClosedLoopPeakOutput(0, .8);
+    liftMaster.configAllowableClosedloopError(0, 600);
 
     liftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative); //init encoder
     liftMaster.setNeutralMode(NeutralMode.Brake); //sets motor to break mode
@@ -81,18 +82,11 @@ public class elevator extends Subsystem {
   }
   
 
-    //test code for positioning 
-    public void changeHeight(Boolean button_one, Boolean button_two){
-      if (button_one){
-        liftMaster.set(ControlMode.Position, 1000); //sets lift to set point 1000
-      }
-      else {
-        liftMaster.set(ControlMode.Position, 0); //sets lift point to set point 0
+    
 
-      }
-    }
-
-
+public void getLimitSwitches(){
+  System.out.println("Top Limit: " + topLimit.get() +" Bottom Limit: " + bottomLimit.get());
+}
 
 //prints lift position
     public int getLiftSensor(){
@@ -105,22 +99,30 @@ public class elevator extends Subsystem {
   }
 
 //zeros lift with driver station button
-    public void zeroLift(Boolean button){
-      if (button){
-        liftMaster.set(ControlMode.PercentOutput, .2);
-        if(bottomLimit.get()){
+    public void zeroLift(){
+      
+       // liftMaster.set(ControlMode.PercentOutput, .2);
+        //if(bottomLimit.get()){
           liftMaster.setSelectedSensorPosition(0); // zero sensor
           liftMaster.set(ControlMode.PercentOutput, 0);
-        }
-      }
+       // }
+      
     }
+
+
 
 //test percent output for lift
     public void analogLift(Double input){
-      if (input > .1 || input < -.1)
+      if (input > .15 && !topLimit.get()){
       liftMaster.set(ControlMode.PercentOutput, input * .8);
-      liftSlave.set(ControlMode.PercentOutput, input * .8);
     }
+    else if (input < .15){
+      liftMaster.set(ControlMode.PercentOutput, input * .8);
+    }
+    else  {
+      liftMaster.set(ControlMode.PercentOutput, 0);
+    }
+  }
 
 
     // final lift loop 
@@ -128,55 +130,110 @@ public class elevator extends Subsystem {
   public void liftLoop(){
     switch(liftState){ //find value of hatchliftMasterState and :
       case 0: //if state is 0
-          setPoint = floorPos; //sets liftMaster to nuetralPos
+      liftMaster.set(ControlMode.Position, floorPos);
+       //sets liftMaster to nuetralPos
           break;
-      case 1 : //if state is 1
-          setPoint = hatch1Pos; //sets liftMaster to hatch 1
+      case 1 : //if state is 2
+      liftMaster.set(ControlMode.Position, cargo1Pos);
+           //sets liftMaster to cargo 1
           break;
-      case 2 : //if state is 2
-          setPoint = cargo1Pos; //sets liftMaster to cargo 1
+      case 2 : //if state is 3
+      liftMaster.set(ControlMode.Position, hatch2Pos);
+       //sets liftMaster to hatch 2
           break;
-      case 3 : //if state is 3
-          setPoint = hatch2Pos; //sets liftMaster to hatch 2
+      case 3 : //if state is 4
+      liftMaster.set(ControlMode.Position, cargo2Pos);
           break;
-      case 4 : //if state is 4
-          setPoint = cargo2Pos; //sets liftMaster to cargo 2
+      case 4 : //if state is 5
+      liftMaster.set(ControlMode.Position, hatch3Pos);
+
+          //sets liftMaster to hatch 3 
           break;
-      case 5 : //if state is 5
-          setPoint = hatch3Pos; //sets liftMaster to hatch 3 
+      case 5 : //if state is 6
+      liftMaster.set(ControlMode.Position, cargo3Pos);
           break;
-      case 6 : //if state is 6
-          setPoint = cargo3Pos; //sets liftMaster to cargo 3
-          break;
-      default :  //if state is unreadable (someone broke something)
-          liftMaster.set(ControlMode.PercentOutput, 0); //if hatchliftMasterState is null or non [0-6], turn lift off
-          System.out.println("lift shut down, liftState: " + liftState); 
-          break;
+       default :  //if state is unreadable (someone broke something)
+           liftMaster.set(ControlMode.PercentOutput, 0); //if hatchliftMasterState is null or non [0-6], turn lift off
+           System.out.println("lift shut down, liftState: " + liftState); 
+           break;
     }
 
-    liftMaster.set(ControlMode.Position, setPoint);
   } 
   
 
   public void changeStage(Boolean buttonHatchReleased, Boolean buttonCargoReleased){
-    if(buttonHatchReleased && firstHatchPress){
-      liftState = 1;
-      firstHatchPress = false;
-    }
+    // if(buttonCargoReleased && firstCargoPress){
+    //   liftState = 1;
+    //   firstCargoPress = false;
+    // }
 
-    else if (buttonHatchReleased && !firstHatchPress){
+    // else if ((buttonCargoReleased && !firstCargoPress) && liftState < 5){
+    //   liftState += 2;
+    // }
+
+    // else if(buttonHatchReleased && liftState < 6){
+    //   liftState += 2;
+    // }
+    /*
+    if (buttonHatchReleased && liftState < 4){
       liftState += 2;
     }
+    else if(buttonCargoReleased && liftState < 5){
+      if (liftState == 0)
+      liftState += 1;
 
-    else if(buttonCargoReleased){
+    }
+    else if (liftState >=1){
       liftState += 2;
+    }*/
+    if(buttonHatchReleased&&liftState<5){
+      liftState +=1;
+
+    }
+  }
+
+  public void changeStageIf (Boolean buttonHatch, Boolean buttonCargo, Boolean buttonFloor){
+    if (buttonCargo && liftState == 0){
+      liftState += 1;
+      liftMaster.set(ControlMode.Position, cargo1Pos);
+    }
+    else if (buttonCargo && liftState == 1){
+      liftState += 1;
+      liftMaster.set(ControlMode.Position, cargo2Pos);
+    }
+    else if (buttonCargo && liftState == 2){
+      liftState += 1;
+      liftMaster.set(ControlMode.Position, cargo3Pos);
+    }
+    else if (buttonHatch && liftStateHatch == 0){
+      liftStateHatch += 1;
+      liftMaster.set(ControlMode.Position, hatch2Pos);
+    }
+    else if (buttonHatch && liftStateHatch == 1){
+      liftStateHatch += 1;
+      liftMaster.set(ControlMode.Position, hatch3Pos);
+    }
+    else if (buttonFloor){
+      liftState = 0;
+      liftStateHatch = 0;
+      liftMaster.set(ControlMode.Position, floorPos);
+    }
+  }
+
+  public void changeStageTest(Boolean button){
+    if (button){
+      liftMaster.set(ControlMode.Position, hatch2Pos);
+    }
+
+    else{
+      liftMaster.set(ControlMode.Position, 0);
     }
   }
 
   public void floorReturn(Boolean buttonReleased){
     if (buttonReleased){
       liftState = 0;
-      firstHatchPress = true;
+      firstCargoPress = true;
     }
   }
 

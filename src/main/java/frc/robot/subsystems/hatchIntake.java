@@ -31,7 +31,7 @@ public class hatchIntake extends Subsystem {
   //the values below need to be changed for final robot, they are in encoder rotation units, 
   //to find values, rotate to the correct point, and find encoder value, and input it in the correct spot 
 
-  static int nuetralPos = 2641; //position in nuetral state
+  static int nuetralPos = 2600; //position in nuetral state
   static int holdPos = 537; //position in holding hatch state
   static int pushPos = 4033; //position in pushing hatch state 
 
@@ -51,6 +51,7 @@ public class hatchIntake extends Subsystem {
     intake.config_kP(0, 3);
     intake.config_kI(0, constant.hatchI);
     intake.config_kD(0, constant.hatchD);
+//    intake.configClosedLoopPeakOutput(0, .5);
 
 
     intake.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder); //init encoder
@@ -68,8 +69,7 @@ public class hatchIntake extends Subsystem {
 
 
  //zero's intake
- public void zeroIntake(Boolean button){
-   if (button){
+ public void zeroIntake(){
   Timer timer = new Timer();
   timer.start();
   while(!timer.hasPeriodPassed(2)){
@@ -79,7 +79,7 @@ public class hatchIntake extends Subsystem {
   intake.setSelectedSensorPosition(0);
   timer.stop();
  }
- }
+ 
 
 
 //main hatch intake loop
@@ -91,7 +91,7 @@ public class hatchIntake extends Subsystem {
       case 1 : //if state is 1
           intake.set(ControlMode.Position, holdPos); //sets intake to holdPos
           break;
-      case 2 : //if state is 2
+      case 2 : //if state is 2 
           intake.set(ControlMode.Position, pushPos); //sets intake to pushPos
           break;
       default :  //if state is unreadable (someone broke something)
