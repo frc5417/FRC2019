@@ -40,14 +40,17 @@ public class elevator extends Subsystem {
   //to find values, rotate to the correct point, and find encoder value, and input it in the correct spot 
 
   static int floorPos = 0;  //position in nuetral state
-  static int hatch2Pos = 7459; //position in hatch 2 height 
-  static int hatch3Pos = 14155; //position in hatch 3 height
-  static int cargo1Pos = 5100; //position in cargo 1 height
-  static int cargo2Pos = 10917; //position in cargo 2 height
-  static int cargo3Pos = 17507; //position in cargo 3 height
+  static int cargoHumanPos = 7700;
+  static int cargoFloorPos = 0;
+  static int hatch1Pos = 1000;
+  static int hatch2Pos = 7700; //position in hatch 2 height 
+  static int hatch3Pos = 14500; //position in hatch 3 height
+  static int cargo1Pos = 4400; //position in cargo 1 height
+  static int cargo2Pos = 11400; //position in cargo 2 height
+  static int cargo3Pos = 17500; //position in cargo 3 height
 
   //THE ARRAY BELOW MUST CORRESPOND TO THE SWITCH STATEMENT "liftLoop" TO MAKE ANY SENSE IN THE DRIVER STATION
-  String[] liftPositions = {"floor", "cargo1", "hatch2", "cargo2", "hatch3", "cargo3"};
+ // String[] liftPositions = {"floor", "cargo1", "hatch2", "cargo2", "hatch3", "cargo3"};
 
   /*hatch liftMaster has 7 states:
 
@@ -68,7 +71,7 @@ public class elevator extends Subsystem {
     liftMaster.config_kI(0, constant.liftI);
     liftMaster.config_kD(0, constant.liftD);
     liftMaster.configClosedLoopPeakOutput(0, .8);
-    liftMaster.configAllowableClosedloopError(0, 600);
+    liftMaster.configAllowableClosedloopError(0, 100);
 
     liftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative); //init encoder
     liftMaster.setNeutralMode(NeutralMode.Brake); //sets motor to break mode
@@ -94,9 +97,8 @@ public void getLimitSwitches(){
     }
 
   //returns current lift position
-  public String getLiftPos(){
-    return liftPositions[liftState]; //liftState is current state of the lift used for switch statement, liftPosition is the array 
-  }
+   // return liftPositions[liftState]; //liftState is current state of the lift used for switch statement, liftPosition is the array 
+  
 
 //zeros lift with driver station button
     public void zeroLift(){
@@ -113,7 +115,7 @@ public void getLimitSwitches(){
 
 //test percent output for lift
     public void analogLift(Double input){
-      if (input > .15 && !topLimit.get()){
+      if (input > .15){
       liftMaster.set(ControlMode.PercentOutput, input * .8);
     }
     else if (input < .15){
@@ -127,36 +129,50 @@ public void getLimitSwitches(){
 
     // final lift loop 
 
-  public void liftLoop(){
-    switch(liftState){ //find value of hatchliftMasterState and :
-      case 0: //if state is 0
-      liftMaster.set(ControlMode.Position, floorPos);
+  public void liftLoop(Integer buttonPressed){
+    switch(buttonPressed){ //find value of hatchliftMasterState and :
+      case 2: //if state is 0
+      //liftMaster.set(ControlMode.Position, cargoHumanPos);
+      setPoint = cargoHumanPos;
        //sets liftMaster to nuetralPos
           break;
-      case 1 : //if state is 2
-      liftMaster.set(ControlMode.Position, cargo1Pos);
+      case 4 : //if state is 2
+      //liftMaster.set(ControlMode.Position, floorPos);
+      setPoint = floorPos;
            //sets liftMaster to cargo 1
           break;
-      case 2 : //if state is 3
-      liftMaster.set(ControlMode.Position, hatch2Pos);
+      case 6 : //if state is 3
+      //liftMaster.set(ControlMode.Position, hatch1Pos);
+      setPoint = hatch1Pos;
        //sets liftMaster to hatch 2
           break;
-      case 3 : //if state is 4
-      liftMaster.set(ControlMode.Position, cargo2Pos);
+      case 8 : //if state is 4
+      //liftMaster.set(ControlMode.Position, hatch2Pos);
+      setPoint = hatch2Pos;
           break;
-      case 4 : //if state is 5
-      liftMaster.set(ControlMode.Position, hatch3Pos);
-
-          //sets liftMaster to hatch 3 
+      case 10 : //if state is 5
+      //liftMaster.set(ControlMode.Position, hatch3Pos);
+      setPoint = hatch3Pos;
           break;
-      case 5 : //if state is 6
-      liftMaster.set(ControlMode.Position, cargo3Pos);
+      case 12 : //if state is 6
+      //liftMaster.set(ControlMode.Position, cargo3Pos);
+      setPoint = cargo3Pos;
+          break;
+      case 14 :
+      //liftMaster.set(ControlMode.Position, cargo2Pos);
+      setPoint = cargo2Pos;
+          break;
+      case 16 :
+      //liftMaster.set(ControlMode.Position, cargo1Pos);
+      setPoint = cargo1Pos;
           break;
        default :  //if state is unreadable (someone broke something)
-           liftMaster.set(ControlMode.PercentOutput, 0); //if hatchliftMasterState is null or non [0-6], turn lift off
-           System.out.println("lift shut down, liftState: " + liftState); 
+      setPoint = 0;
+           System.out.println("lift shut down, liftState: " + setPoint); 
            break;
     }
+
+    liftMaster.set(ControlMode.Position, setPoint);
 
   } 
   

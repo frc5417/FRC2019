@@ -75,23 +75,23 @@ public class cargoIntake extends Subsystem {
 public void cargoLoop(Integer input){
   switch (input){
     case (0):
-      cargoLeft.set(ControlMode.PercentOutput, -1);
-      cargoRight.set(ControlMode.PercentOutput, 1);
+      cargoLeft.set(ControlMode.PercentOutput, 1);
+      cargoRight.set(ControlMode.PercentOutput, -1); //up
       break;
     case (90):
-      cargoLeft.set(ControlMode.PercentOutput,-1);
-      cargoRight.set(ControlMode.PercentOutput,.4);
+      cargoFloorLeft.set(ControlMode.PercentOutput,1);
+      cargoFloorRight.set(ControlMode.PercentOutput,1);
       break;
     case (180):
-      cargoLeft.set(ControlMode.PercentOutput,1);
-      cargoRight.set(ControlMode.PercentOutput,-1);
+      cargoLeft.set(ControlMode.PercentOutput,-1);
+      cargoRight.set(ControlMode.PercentOutput,1);
 
       cargoFloorLeft.set(ControlMode.PercentOutput, -1);
       cargoFloorRight.set(ControlMode.PercentOutput, 1);
       break;
     case(270):
-      cargoLeft.set(ControlMode.PercentOutput,-.4);
-      cargoRight.set(ControlMode.PercentOutput,1);
+      cargoFloorLeft.set(ControlMode.PercentOutput,-1);
+      cargoFloorRight.set(ControlMode.PercentOutput,1);
       break;
     default:
       stopCargoIntake();

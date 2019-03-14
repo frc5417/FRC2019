@@ -31,9 +31,9 @@ public class hatchIntake extends Subsystem {
   //the values below need to be changed for final robot, they are in encoder rotation units, 
   //to find values, rotate to the correct point, and find encoder value, and input it in the correct spot 
 
-  static int nuetralPos = 2600; //position in nuetral state
+  static int nuetralPos = 2000; //position in nuetral state
   static int holdPos = 537; //position in holding hatch state
-  static int pushPos = 4033; //position in pushing hatch state 
+  static int pushPos = 3000; //position in pushing hatch state 
 
   /*hatch intake has 3 states:
 
@@ -48,9 +48,10 @@ public class hatchIntake extends Subsystem {
   @Override
   public void initDefaultCommand() { //default command
     //setting PID constants
-    intake.config_kP(0, 3);
+    intake.config_kP(0, 2.6);
     intake.config_kI(0, constant.hatchI);
     intake.config_kD(0, constant.hatchD);
+    intake.configAllowableClosedloopError(0, 50);
 //    intake.configClosedLoopPeakOutput(0, .5);
 
 
@@ -59,7 +60,7 @@ public class hatchIntake extends Subsystem {
     //zero intake code
     Timer timer = new Timer();
     timer.start();
-    while(!timer.hasPeriodPassed(2)){
+    while(!timer.hasPeriodPassed(.5)){
       intake.set(ControlMode.PercentOutput, -1);
     }
     intake.set(ControlMode.PercentOutput, 0);

@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -15,8 +16,7 @@ import frc.robot.subsystems.cargoIntake;
 import frc.robot.subsystems.driveTrain;
 import frc.robot.subsystems.elevator;
 import frc.robot.subsystems.hatchIntake;
-import edu.wpi.first.cameraserver.CameraServer;
-
+import frc.robot.buttonBoard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -35,6 +35,7 @@ public class Robot extends TimedRobot {
   //Defining object variables (naming subsystems)
   public static Joystick mController;
   public static Joystick dController;
+  public static buttonBoard bBoard;
   public static frc.robot.subsystems.driveTrain drive;
   public static hatchIntake hatchIntake;
   public static cargoIntake cargoIntake;
@@ -66,6 +67,7 @@ public class Robot extends TimedRobot {
 
     dController = new Joystick(0);//driver init
     mController = new Joystick(1);//manip init
+    bBoard = new buttonBoard();
 
 
     drive = new driveTrain();//subsystem init (runs default commands)
@@ -140,13 +142,12 @@ public class Robot extends TimedRobot {
 
      drive.SetPower(dController.getRawAxis(1), dController.getRawAxis(5)); //drive drive train
 
-     lift.analogLift((-mController.getRawAxis(2))+mController.getRawAxis(3)); //manip left stick Y axis
+     //lift.analogLift((-mController.getRawAxis(2))+mController.getRawAxis(3)); //manip left stick Y axis
+     System.out.println(lift.getLiftSensor());
+     //System.out.println(bBoard.getRecentButton());
      //lift.getLimitSwitches();
-     //lift.liftLoop();
-     //lift.floorReturn(mController.getRawButton(7));
-     //lift.changeStage(mController.getRawButtonReleased(5), mController.getRawButtonReleased(6));
+     lift.liftLoop(bBoard.getRecentButton());
 
-    //lift.changeHeight(mController.getRawButtonReleased(5),mController.getRawButtonReleased(6));
      //hatchIntake.driveHatch(mController.getRawButton(5), mController.getRawButton(6));
      //hatchIntake.zeroIntake(SmartDashboard.putBoolean("DB/Button 1", true));
      hatchIntake.cycleHatch(mController.getRawButtonReleased(1), mController.getRawButtonReleased(2), mController.getRawButtonReleased(4)); //manip A
