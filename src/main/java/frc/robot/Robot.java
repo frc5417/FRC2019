@@ -143,7 +143,7 @@ public class Robot extends TimedRobot {
      drive.SetPower(dController.getRawAxis(1), dController.getRawAxis(5)); //drive drive train
 
      //lift.analogLift((-mController.getRawAxis(2))+mController.getRawAxis(3)); //manip left stick Y axis
-     System.out.println(lift.getLiftSensor());
+     //System.out.println(lift.getLiftSensor());
      //System.out.println(bBoard.getRecentButton());
      //lift.getLimitSwitches();
      lift.liftLoop(bBoard.getRecentButton());

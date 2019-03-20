@@ -40,14 +40,14 @@ public class elevator extends Subsystem {
   //to find values, rotate to the correct point, and find encoder value, and input it in the correct spot 
 
   static int floorPos = 0;  //position in nuetral state
-  static int cargoHumanPos = 7700;
+  static int cargoHumanPos = 1300;
   static int cargoFloorPos = 0;
   static int hatch1Pos = 1000;
   static int hatch2Pos = 7700; //position in hatch 2 height 
-  static int hatch3Pos = 14500; //position in hatch 3 height
+  static int hatch3Pos = 15050; //position in hatch 3 height
   static int cargo1Pos = 4400; //position in cargo 1 height
-  static int cargo2Pos = 11400; //position in cargo 2 height
-  static int cargo3Pos = 17500; //position in cargo 3 height
+  static int cargo2Pos = 11300; //position in cargo 2 height
+  static int cargo3Pos = 19000; //position in cargo 3 height
 
   //THE ARRAY BELOW MUST CORRESPOND TO THE SWITCH STATEMENT "liftLoop" TO MAKE ANY SENSE IN THE DRIVER STATION
  // String[] liftPositions = {"floor", "cargo1", "hatch2", "cargo2", "hatch3", "cargo3"};
