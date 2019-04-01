@@ -142,25 +142,16 @@ public class Robot extends TimedRobot {
 
      drive.SetPower(dController.getRawAxis(1), dController.getRawAxis(5)); //drive drive train
 
-     //lift.analogLift((-mController.getRawAxis(2))+mController.getRawAxis(3)); //manip left stick Y axis
-     //System.out.println(lift.getLiftSensor());
-     //System.out.println(bBoard.getRecentButton());
-     //lift.getLimitSwitches();
      lift.liftLoop(bBoard.getRecentButton());
+     lift.digitalLiftAdjust(mController.getRawAxis(1));
 
-     //hatchIntake.driveHatch(mController.getRawButton(5), mController.getRawButton(6));
-     //hatchIntake.zeroIntake(SmartDashboard.putBoolean("DB/Button 1", true));
+     
      hatchIntake.cycleHatch(mController.getRawButtonReleased(1), mController.getRawButtonReleased(2), mController.getRawButtonReleased(4)); //manip A
     
 
      cargoIntake.pivotIntake(mController.getRawButton(3));
      cargoIntake.cargoLoop(mController.getPOV());
-
-    // System.out.println(hatchIntake.getHatchState());
-
-     SmartDashboard.putString("DB/String 0", "Lift Encoder @:" + Integer.toString(lift.getLiftSensor())); //prints encoder pos to dash
-     //System.out.println(lift.getLiftSensor());
-     //SmartDashboard.putString("DB/String 1", ("Lift position:" + lift.getLiftPos())); //prints lift pos to dash
+     
   }
 
   /**

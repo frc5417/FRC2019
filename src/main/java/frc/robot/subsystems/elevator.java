@@ -114,15 +114,12 @@ public void getLimitSwitches(){
 
 
 //test percent output for lift
-    public void analogLift(Double input){
+    public void digitalLiftAdjust(Double input){
       if (input > .15){
-      liftMaster.set(ControlMode.PercentOutput, input * .8);
+      setPoint += input;
     }
-    else if (input < .15){
-      liftMaster.set(ControlMode.PercentOutput, input * .8);
-    }
-    else  {
-      liftMaster.set(ControlMode.PercentOutput, 0);
+    else if (input < -.15){
+      setPoint += input;
     }
   }
 
@@ -176,63 +173,10 @@ public void getLimitSwitches(){
 
   } 
   
-
-  public void changeStage(Boolean buttonHatchReleased, Boolean buttonCargoReleased){
-    // if(buttonCargoReleased && firstCargoPress){
-    //   liftState = 1;
-    //   firstCargoPress = false;
-    // }
-
-    // else if ((buttonCargoReleased && !firstCargoPress) && liftState < 5){
-    //   liftState += 2;
-    // }
-
-    // else if(buttonHatchReleased && liftState < 6){
-    //   liftState += 2;
-    // }
-    /*
-    if (buttonHatchReleased && liftState < 4){
-      liftState += 2;
-    }
-    else if(buttonCargoReleased && liftState < 5){
-      if (liftState == 0)
-      liftState += 1;
-
-    }
-    else if (liftState >=1){
-      liftState += 2;
-    }*/
-    if(buttonHatchReleased&&liftState<5){
-      liftState +=1;
-
-    }
-  }
-
-  public void changeStageIf (Boolean buttonHatch, Boolean buttonCargo, Boolean buttonFloor){
-    if (buttonCargo && liftState == 0){
-      liftState += 1;
-      liftMaster.set(ControlMode.Position, cargo1Pos);
-    }
-    else if (buttonCargo && liftState == 1){
-      liftState += 1;
-      liftMaster.set(ControlMode.Position, cargo2Pos);
-    }
-    else if (buttonCargo && liftState == 2){
-      liftState += 1;
-      liftMaster.set(ControlMode.Position, cargo3Pos);
-    }
-    else if (buttonHatch && liftStateHatch == 0){
-      liftStateHatch += 1;
-      liftMaster.set(ControlMode.Position, hatch2Pos);
-    }
-    else if (buttonHatch && liftStateHatch == 1){
-      liftStateHatch += 1;
-      liftMaster.set(ControlMode.Position, hatch3Pos);
-    }
-    else if (buttonFloor){
+  public void floorReturn(Boolean buttonReleased){
+    if (buttonReleased){
       liftState = 0;
-      liftStateHatch = 0;
-      liftMaster.set(ControlMode.Position, floorPos);
+      firstCargoPress = true;
     }
   }
 
@@ -246,11 +190,6 @@ public void getLimitSwitches(){
     }
   }
 
-  public void floorReturn(Boolean buttonReleased){
-    if (buttonReleased){
-      liftState = 0;
-      firstCargoPress = true;
-    }
-  }
+
 
 }
