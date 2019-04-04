@@ -32,7 +32,9 @@ public class elevator extends Subsystem {
   
 
   int liftState = 0; //init variable for state of liftMaster
-  int setPoint = 0; //used for beta testing lift
+  int setPoint = 0; //where lift wants to go based off lift positions and button panel
+  int offSet = 0; //established by moving analog stick, resets after each button press
+
   int liftStateHatch = 0;
   Boolean firstCargoPress = true;
 
@@ -114,12 +116,15 @@ public void getLimitSwitches(){
 
 
 //test percent output for lift
-    public void digitalLiftAdjust(Double input){
-      if (input > .15){
-      setPoint += input;
+    public void digitalLiftAdjust(Double input, Boolean resetButtonPressed){
+      if (input > .15){ // deadzones
+      offSet += input;
     }
-    else if (input < -.15){
-      setPoint += input;
+    else if (input < -.15){ //deadzones
+      offSet += input;
+    }
+    else if (resetButtonPressed){
+      offSet = 0; //resets if button is pressed
     }
   }
 
@@ -169,7 +174,7 @@ public void getLimitSwitches(){
            break;
     }
 
-    liftMaster.set(ControlMode.Position, setPoint);
+    liftMaster.set(ControlMode.Position, setPoint + offSet);
 
   } 
   
