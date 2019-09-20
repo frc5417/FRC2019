@@ -28,8 +28,7 @@ public class cargoIntake extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  VictorSPX cargoLeft = new VictorSPX(constant.cargoIntakeLeft);
-  VictorSPX cargoRight = new VictorSPX(constant.cargoIntakeRight);
+  VictorSPX cargoIntake = new VictorSPX(constant.cargoIntake);
 
   VictorSPX cargoFloorLeft = new VictorSPX(constant.cargoFloorIntakeLeft);
   // VictorSPX cargoFloorRight = new VictorSPX(constant.cargoFloorIntakeRight);
@@ -48,8 +47,7 @@ public class cargoIntake extends Subsystem {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
     //setting nuetral modes
-    cargoLeft.setNeutralMode(NeutralMode.Coast);
-    cargoRight.setNeutralMode(NeutralMode.Coast);
+    cargoIntake.setNeutralMode(NeutralMode.Coast);
 
     cargoFloorLeft.setNeutralMode(NeutralMode.Coast);
     // cargoFloorRight.setNeutralMode(NeutralMode.Coast);
@@ -60,8 +58,7 @@ public class cargoIntake extends Subsystem {
   }
 
   public void stopCargoIntake(){ //turns off both cargo intake motors
-    cargoLeft.set(ControlMode.PercentOutput,0);
-    cargoRight.set(ControlMode.PercentOutput,0);
+    cargoIntake.set(ControlMode.PercentOutput,0);
 
     cargoFloorLeft.set(ControlMode.PercentOutput, 0);
     // cargoFloorRight.set(ControlMode.PercentOutput, 0);
@@ -75,16 +72,14 @@ public class cargoIntake extends Subsystem {
 public void cargoLoop(Integer input){
   switch (input){
     case (0):
-      cargoLeft.set(ControlMode.PercentOutput, 1);
-      cargoRight.set(ControlMode.PercentOutput, -1); //up
+      cargoIntake.set(ControlMode.PercentOutput, 1);
       break;
     case (90):
       cargoFloorLeft.set(ControlMode.PercentOutput,1);
       // cargoFloorRight.set(ControlMode.PercentOutput,1);
       break;
     case (180):
-      cargoLeft.set(ControlMode.PercentOutput,-1);
-      cargoRight.set(ControlMode.PercentOutput,1);
+      cargoIntake.set(ControlMode.PercentOutput,-1);
 
       cargoFloorLeft.set(ControlMode.PercentOutput, -1);
       // cargoFloorRight.set(ControlMode.PercentOutput, 1);

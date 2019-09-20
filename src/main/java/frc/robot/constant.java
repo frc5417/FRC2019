@@ -23,9 +23,10 @@ public class constant {
     public final static int cargoFloorIntakeLeft = 13;//
     public final static int cargoFloorIntakeRight = 14;//
     public final static int cargoFloorIntakePivot = 3;//
-    public final static int cargoIntakeLeft = 1;//
-    public final static int cargoIntakeRight = 2;//
+    public final static int cargoIntake = 1;//
     public final static int hatchIntake = 4;//
+    public final static int climbMaster = 20;
+    public final static int climbSlave = 21;
 
     //limit switches
     public final static int hatchZeroSwitch = 0;

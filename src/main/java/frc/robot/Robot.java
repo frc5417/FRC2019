@@ -140,7 +140,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-     drive.SetPower(dController.getRawAxis(1), dController.getRawAxis(5)); //drive drive train
+     drive.SetPower(-dController.getRawAxis(1), -dController.getRawAxis(5)); //drive drive train
+     //drive.climb(dController.getRawButton(1), dController.getRawButton(2));
 
      //lift.analogLift(mController.getRawAxis(1)); //manip left stick Y axis
      //System.out.println(lift.getLiftSensor());
@@ -148,8 +149,7 @@ public class Robot extends TimedRobot {
      //lift.getLimitSwitches();
     lift.liftLoop(bBoard.getRecentButton());
 
-     //hatchIntake.driveHatch(mController.getRawButton(5), mController.getRawButton(6));
-     //hatchIntake.zeroIntake(SmartDashboard.putBoolean("DB/Button 1", true));
+     
      hatchIntake.cycleHatch(mController.getRawButtonReleased(1), mController.getRawButtonReleased(2), mController.getRawButtonReleased(4)); //manip A
     
 

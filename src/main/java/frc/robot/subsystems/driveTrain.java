@@ -12,8 +12,9 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.Solenoid;
 // import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.constant;
@@ -34,8 +35,9 @@ VictorSPX driveLeftSlave2 = new VictorSPX(constant.driveLeftSlave2);
 TalonSRX driveRightMaster = new TalonSRX(constant.driveRightMaster);
 VictorSPX driveRightSlave1 = new VictorSPX(constant.driveRightSlave1);
 VictorSPX driveRightSlave2 = new VictorSPX(constant.driveRightSlave2);
-//climber solonoid init
-Solenoid climberSolenoid = new Solenoid(0);
+//climber Neo init
+// CANSparkMax climbMaster = new CANSparkMax(constant.climbMaster, MotorType.kBrushless);
+// CANSparkMax climbSlave = new CANSparkMax(constant.climbSlave, MotorType.kBrushless);
 
 
 
@@ -56,7 +58,6 @@ Solenoid climberSolenoid = new Solenoid(0);
      driveLeftSlave1.set(ControlMode.Follower, driveLeftMaster.getDeviceID());//setting left side follower mode
      driveLeftSlave2.set(ControlMode.Follower, driveLeftMaster.getDeviceID());
      //driveLeftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 30); //Set the feedback device that is hooked up to the talon
-
 		
 		/* Set Neutral Mode */
     driveLeftMaster.setNeutralMode(NeutralMode.Coast);
@@ -97,6 +98,25 @@ Solenoid climberSolenoid = new Solenoid(0);
 
     driveLeftMaster.set(ControlMode.PercentOutput, (((y1)+(-y2)-(x))/2));
   }
+
+  // public void climb(Boolean buttonFoward, Boolean buttonReverse){
+  //   if (buttonFoward){
+  //     climbMaster.set(.3);
+  //     climbSlave.set(-.3);
+
+  //   }
+  //   else if (buttonReverse){
+  //     climbMaster.set(-.3);
+  //     climbSlave.set(.3);
+
+  //   }
+  //   else {
+  //     climbMaster.set(0);
+  //     climbSlave.set(0);
+
+  //   }
+
+  // }
 
 //climber release
   
