@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -43,11 +44,11 @@ public class elevator extends Subsystem {
   static int cargoHumanPos = 1300;
   static int cargoFloorPos = 0;
   static int hatch1Pos = 1000;
-  static int hatch2Pos = 7700; //position in hatch 2 height 
-  static int hatch3Pos = 15050; //position in hatch 3 height
-  static int cargo1Pos = 4400; //position in cargo 1 height
-  static int cargo2Pos = 11300; //position in cargo 2 height
-  static int cargo3Pos = 19000; //position in cargo 3 height
+  static int hatch2Pos = 4500; //position in hatch 2 height 
+  static int hatch3Pos = 8500; //position in hatch 3 height
+  static int cargo1Pos = 3000; //position in cargo 1 height
+  static int cargo2Pos = 7000; //position in cargo 2 height
+  static int cargo3Pos = 11000; //position in cargo 3 height
 
   //THE ARRAY BELOW MUST CORRESPOND TO THE SWITCH STATEMENT "liftLoop" TO MAKE ANY SENSE IN THE DRIVER STATION
  // String[] liftPositions = {"floor", "cargo1", "hatch2", "cargo2", "hatch3", "cargo3"};
@@ -70,6 +71,7 @@ public class elevator extends Subsystem {
     liftMaster.config_kP(0, constant.liftP);
     liftMaster.config_kI(0, constant.liftI);
     liftMaster.config_kD(0, constant.liftD);
+    liftMaster.config_kF(0, .3);
     liftMaster.configClosedLoopPeakOutput(0, .8);
     liftMaster.configAllowableClosedloopError(0, 100);
 
@@ -115,15 +117,10 @@ public void getLimitSwitches(){
 
 //test percent output for lift
     public void analogLift(Double input){
-      if (input > .15){
+    
       liftMaster.set(ControlMode.PercentOutput, input * .8);
-    }
-    else if (input < .15){
-      liftMaster.set(ControlMode.PercentOutput, input * .8);
-    }
-    else  {
-      liftMaster.set(ControlMode.PercentOutput, 0);
-    }
+   
+    
   }
 
 
@@ -172,7 +169,7 @@ public void getLimitSwitches(){
            break;
     }
 
-    liftMaster.set(ControlMode.Position, setPoint);
+    liftMaster.set(ControlMode.MotionMagic, setPoint, DemandType.ArbitraryFeedForward, .1); //.1 = feedfoward
 
   } 
   

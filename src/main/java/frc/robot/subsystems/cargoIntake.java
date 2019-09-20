@@ -32,7 +32,7 @@ public class cargoIntake extends Subsystem {
   VictorSPX cargoRight = new VictorSPX(constant.cargoIntakeRight);
 
   VictorSPX cargoFloorLeft = new VictorSPX(constant.cargoFloorIntakeLeft);
-  VictorSPX cargoFloorRight = new VictorSPX(constant.cargoFloorIntakeRight);
+  // VictorSPX cargoFloorRight = new VictorSPX(constant.cargoFloorIntakeRight);
   VictorSPX cargoFloorPivot = new VictorSPX(constant.cargoFloorIntakePivot);
 
   DigitalInput cargoCheck = new DigitalInput(constant.cargoSenseSwitch);
@@ -52,7 +52,7 @@ public class cargoIntake extends Subsystem {
     cargoRight.setNeutralMode(NeutralMode.Coast);
 
     cargoFloorLeft.setNeutralMode(NeutralMode.Coast);
-    cargoFloorRight.setNeutralMode(NeutralMode.Coast);
+    // cargoFloorRight.setNeutralMode(NeutralMode.Coast);
 
     //setting pivot nuetral mode
     cargoFloorPivot.setNeutralMode(NeutralMode.Brake);
@@ -64,7 +64,7 @@ public class cargoIntake extends Subsystem {
     cargoRight.set(ControlMode.PercentOutput,0);
 
     cargoFloorLeft.set(ControlMode.PercentOutput, 0);
-    cargoFloorRight.set(ControlMode.PercentOutput, 0);
+    // cargoFloorRight.set(ControlMode.PercentOutput, 0);
   }
 
 //all following commands are button holds
@@ -80,18 +80,18 @@ public void cargoLoop(Integer input){
       break;
     case (90):
       cargoFloorLeft.set(ControlMode.PercentOutput,1);
-      cargoFloorRight.set(ControlMode.PercentOutput,1);
+      // cargoFloorRight.set(ControlMode.PercentOutput,1);
       break;
     case (180):
       cargoLeft.set(ControlMode.PercentOutput,-1);
       cargoRight.set(ControlMode.PercentOutput,1);
 
       cargoFloorLeft.set(ControlMode.PercentOutput, -1);
-      cargoFloorRight.set(ControlMode.PercentOutput, 1);
+      // cargoFloorRight.set(ControlMode.PercentOutput, 1);
       break;
     case(270):
       cargoFloorLeft.set(ControlMode.PercentOutput,-1);
-      cargoFloorRight.set(ControlMode.PercentOutput,1);
+      // cargoFloorRight.set(ControlMode.PercentOutput,1);
       break;
     default:
       stopCargoIntake();

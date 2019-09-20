@@ -69,7 +69,7 @@ Solenoid climberSolenoid = new Solenoid(0);
 		
 		
     
-    climberSolenoid.set(true); //turning Climber solenoid off (praying )
+   // climberSolenoid.set(true); //turning Climber solenoid off (praying )
 
 		
   }
@@ -78,14 +78,14 @@ Solenoid climberSolenoid = new Solenoid(0);
   public void SetPower(double leftPower, double rightPower)
   {
     // m_drive.tankDrive(rightPower, leftPower);
-    driveRightMaster.set(ControlMode.PercentOutput, -rightPower);
-    driveRightSlave1.set(ControlMode.PercentOutput, -rightPower);
-    driveRightSlave2.set(ControlMode.PercentOutput, -rightPower);
+    driveRightMaster.set(ControlMode.PercentOutput, rightPower);
+    driveRightSlave1.set(ControlMode.PercentOutput, rightPower);
+    driveRightSlave2.set(ControlMode.PercentOutput, rightPower);
 
 
-    driveLeftMaster.set(ControlMode.PercentOutput, leftPower);
-    driveLeftSlave1.set(ControlMode.PercentOutput, leftPower);
-    driveLeftSlave2.set(ControlMode.PercentOutput, leftPower);
+    driveLeftMaster.set(ControlMode.PercentOutput, -leftPower);
+    driveLeftSlave1.set(ControlMode.PercentOutput, -leftPower);
+    driveLeftSlave2.set(ControlMode.PercentOutput, -leftPower);
 
 
   }
@@ -99,11 +99,7 @@ Solenoid climberSolenoid = new Solenoid(0);
   }
 
 //climber release
-  public void releaseTheKraken(Boolean button1, Boolean button2){
-    if (button1 && button2){
-      climberSolenoid.set(true);
-    }
-  }
+  
 
   //Code that squares up with two range sensors
 
