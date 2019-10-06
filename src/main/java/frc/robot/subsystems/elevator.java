@@ -69,16 +69,18 @@ public class elevator extends Subsystem {
   public void initDefaultCommand() { //default command
     //setting pid constants
 
+    liftSlave.follow(liftMaster);
+
     //(PID SLOT, Value)
     liftMaster.config_kP(0, constant.liftP);
     liftMaster.config_kI(0, constant.liftI);
     liftMaster.config_kD(0, constant.liftD);
     liftMaster.config_kF(0, .3);
-    //liftMaster.configClosedLoopPeakOutput(0, .8);
-    liftMaster.configNominalOutputForward(0.0);
-    liftMaster.configNominalOutputForward(0.0);
-    liftMaster.configPeakOutputForward(1.0);
-    liftMaster.configPeakOutputReverse(-0.7);
+    liftMaster.configClosedLoopPeakOutput(0, 0.9);
+    // liftMaster.configNominalOutputForward(0.0);
+    // liftMaster.configNominalOutputForward(0.0);
+    // liftMaster.configPeakOutputForward(1.0);
+    // liftMaster.configPeakOutputReverse(-0.7);
 
 
     liftMaster.configAllowableClosedloopError(0, 100);
