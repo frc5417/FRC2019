@@ -40,9 +40,16 @@ public class constant {
 
 
     //liftPID
-    public final static Double liftP = 0.5;
+    public final static Double liftP = 0.3;
     public final static Double liftI = 0.0;
-    public final static Double liftD = 0.0;
+    public final static Double liftD = 0.1;
+
+    public static final double ELEVATOR_ZERO = 1.0;
+	public static final double ELEVATOR_ZERO_F = -0.1;
+	public static final double ELEVATOR_F = 0.3;
+	public static final double ELEVATOR_F_DOWN = -0.3;
+	public static final double ELEVATOR_ZERO_NEUTRAL_POSITION =400.0;
+	public static final double ELEVATOR_ZERO_NEUTRAL_POSITION_DEADBAND = 50.0;
 
     //hatchPID
     public final static Double hatchP = 5.0;

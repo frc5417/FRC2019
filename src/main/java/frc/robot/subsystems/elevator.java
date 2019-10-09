@@ -16,6 +16,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
+//import frc.robot.Robot;
 import frc.robot.constant;
 
 /**
@@ -25,8 +26,8 @@ public class elevator extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  TalonSRX liftMaster = new TalonSRX(constant.liftMaster); //motor controllers
-  VictorSPX liftSlave = new VictorSPX(constant.liftSlave);
+  public TalonSRX liftMaster = new TalonSRX(constant.liftMaster); //motor controllers
+  public VictorSPX liftSlave = new VictorSPX(constant.liftSlave);
 
   DigitalInput topLimit = new DigitalInput(constant.liftTopSwitch); //limit switches
   DigitalInput bottomLimit = new DigitalInput(constant.liftBottomSwitch);
@@ -43,14 +44,14 @@ public class elevator extends Subsystem {
   //to find values, rotate to the correct point, and find encoder value, and input it in the correct spot 
 
   static int floorPos = 0;  //position in nuetral state
-  static int cargoHumanPos = 1300;
+  static int cargoHumanPos = 1250;
   static int cargoFloorPos = 0;
   static int hatch1Pos = 1000;
-  static int hatch2Pos = 4500; //position in hatch 2 height 
-  static int hatch3Pos = 8500; //position in hatch 3 height
-  static int cargo1Pos = 3000; //position in cargo 1 height
-  static int cargo2Pos = 7000; //position in cargo 2 height
-  static int cargo3Pos = 11000; //position in cargo 3 height
+  static int hatch2Pos = 7000; //position in hatch 2 height 
+  static int hatch3Pos = 14050; //position in hatch 3 height
+  static int cargo1Pos = 4250; //position in cargo 1 height
+  static int cargo2Pos = 11200; //position in cargo 2 height
+  static int cargo3Pos = 18000; //position in cargo 3 height
 
   //THE ARRAY BELOW MUST CORRESPOND TO THE SWITCH STATEMENT "liftLoop" TO MAKE ANY SENSE IN THE DRIVER STATION
  // String[] liftPositions = {"floor", "cargo1", "hatch2", "cargo2", "hatch3", "cargo3"};
@@ -61,33 +62,42 @@ public class elevator extends Subsystem {
   1:holding hatch
   2:pushing down hatch
 
-  to change the state of the hatch, change this value to 0, 1, or 2
+  to change the state of the hatch, change this value to 0, 1, or 2;';'
   */
 
   
   @Override
   public void initDefaultCommand() { //default command
-    //setting pid constants
+
+    liftMaster.configVoltageCompSaturation(12.0, 0);
+		liftMaster.enableVoltageCompensation(true);
+
+		liftMaster.configNominalOutputForward(0.0, 0);
+		liftMaster.configNominalOutputReverse(0.0, 0);
+
+		liftMaster.configPeakOutputForward(1.0, 0);
+		liftMaster.configPeakOutputReverse(-0.7, 0);
+    //setting pid constant
 
     //(PID SLOT, Value)
     liftMaster.config_kP(0, constant.liftP);
     liftMaster.config_kI(0, constant.liftI);
     liftMaster.config_kD(0, constant.liftD);
-    liftMaster.config_kF(0, .3);
-    //liftMaster.configClosedLoopPeakOutput(0, .8);
-    liftMaster.configNominalOutputForward(0.0);
-    liftMaster.configNominalOutputForward(0.0);
-    liftMaster.configPeakOutputForward(1.0);
-    liftMaster.configPeakOutputReverse(-0.7);
+    liftMaster.config_kF(0, 0.0);
+    //liftMaster.configClosedLoopPeakOutput(0, 1.0);
 
-
-    liftMaster.configAllowableClosedloopError(0, 100);
 
     liftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative); //init encoder
     liftMaster.setNeutralMode(NeutralMode.Brake); //sets motor to break mode
+    liftSlave.setNeutralMode(NeutralMode.Brake);
+
     liftSlave.follow(liftMaster); //lift slave follows lift master
     liftMaster.setSelectedSensorPosition(0); // zero sensor
     liftMaster.setSensorPhase(true);
+
+    liftMaster.set(ControlMode.Position,0);
+
+    System.out.println("Elevator Initialized");
 
 
 
@@ -177,7 +187,34 @@ public void getLimitSwitches(){
            break;
     }
 
-    liftMaster.set(ControlMode.MotionMagic, setPoint, DemandType.ArbitraryFeedForward, .1); //.1 = feedfoward
+    if (setPoint<1)
+      setPoint=1;
+
+    //liftMaster.set(ControlMode.Position, setPoint, DemandType.ArbitraryFeedForward, constant.liftF); //.1 = feedfoward
+
+    if(setPoint > constant.ELEVATOR_ZERO) {
+      liftMaster.set(ControlMode.Position, setPoint, DemandType.ArbitraryFeedForward, constant.ELEVATOR_F);
+    }
+
+    else
+    {
+      if(liftMaster.getSelectedSensorPosition() > constant.ELEVATOR_ZERO_NEUTRAL_POSITION )
+      {
+        liftMaster.set(ControlMode.Position, setPoint, DemandType.ArbitraryFeedForward, constant.ELEVATOR_F_DOWN);
+      }
+      else
+      {
+        if(liftMaster.getSelectedSensorPosition() < constant.ELEVATOR_ZERO_NEUTRAL_POSITION_DEADBAND)
+        {
+          liftMaster.set(ControlMode.Position, setPoint, DemandType.ArbitraryFeedForward, constant.ELEVATOR_ZERO_F);
+
+        }
+        double slope = (constant.ELEVATOR_F_DOWN - constant.ELEVATOR_ZERO_F) / (constant.ELEVATOR_ZERO_NEUTRAL_POSITION - constant.ELEVATOR_ZERO_NEUTRAL_POSITION_DEADBAND);
+        double y_intercept = constant.ELEVATOR_ZERO_F - (slope*constant.ELEVATOR_ZERO_NEUTRAL_POSITION_DEADBAND);
+        double linear_F = slope*(liftMaster.getSelectedSensorPosition()) + y_intercept;
+        liftMaster.set(ControlMode.Position, setPoint, DemandType.ArbitraryFeedForward, linear_F);
+      }
+    }
 
   } 
   

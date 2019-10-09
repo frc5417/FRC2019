@@ -140,7 +140,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-     drive.SetPower(-dController.getRawAxis(1), -dController.getRawAxis(5)); //drive drive train
+    System.out.printf("Master: %f Slave %f/n", lift.liftMaster.getMotorOutputVoltage(),lift.liftSlave.getMotorOutputVoltage());
+
+     drive.SetPower(dController.getRawAxis(1), dController.getRawAxis(5)); //drive drive train
      //drive.climb(dController.getRawButton(1), dController.getRawButton(2));
 
      //lift.analogLift(mController.getRawAxis(1)); //manip left stick Y axis
@@ -153,7 +155,8 @@ public class Robot extends TimedRobot {
      hatchIntake.cycleHatch(mController.getRawButtonReleased(1), mController.getRawButtonReleased(2), mController.getRawButtonReleased(4)); //manip A
     
 
-     cargoIntake.pivotIntake(mController.getRawButton(3));
+     cargoIntake.pivotIntakeUp(mController.getRawButton(3));
+     cargoIntake.pivotIntakeDown(mController.getRawButton(5));
      cargoIntake.cargoLoop(mController.getPOV());
 
     // System.out.println(hatchIntake.getHatchState());

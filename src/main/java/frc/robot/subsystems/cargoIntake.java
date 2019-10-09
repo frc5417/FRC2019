@@ -94,7 +94,15 @@ public void cargoLoop(Integer input){
   }
 }
 
-  public void pivotIntake(Boolean button){
+  public void pivotIntakeUp(Boolean button){
+    if(button){
+      cargoFloorPivot.set(ControlMode.PercentOutput, 1);
+    }
+    else{
+      cargoFloorPivot.set(ControlMode.PercentOutput, 0);
+    }
+  }
+  public void pivotIntakeDown(Boolean button){
     if(button){
       cargoFloorPivot.set(ControlMode.PercentOutput, 1);
     }
