@@ -194,27 +194,26 @@ public void getLimitSwitches(){
 
     //liftMaster.set(ControlMode.Position, setPoint, DemandType.ArbitraryFeedForward, constant.liftF); //.1 = feedfoward
 
-    if(setPoint > constant.ELEVATOR_ZERO) {
+    if(setPoint > constant.ELEVATOR_ZERO && setPoint > liftMaster.getSelectedSensorPosition()) {
       liftMaster.set(ControlMode.Position, setPoint, DemandType.ArbitraryFeedForward, constant.ELEVATOR_F);
     }
-
-    else
-    {
-      if(liftMaster.getSelectedSensorPosition() > constant.ELEVATOR_ZERO_NEUTRAL_POSITION )
-      {
+    else if (setPoint > constant.ELEVATOR_ZERO) {
+      liftMaster.set(ControlMode.Position, setPoint, DemandType.ArbitraryFeedForward, constant.ELEVATOR_F_DOWN);
+    }
+    else{
+      if(liftMaster.getSelectedSensorPosition() > constant.ELEVATOR_ZERO_NEUTRAL_POSITION ){
         liftMaster.set(ControlMode.Position, setPoint, DemandType.ArbitraryFeedForward, constant.ELEVATOR_F_DOWN);
       }
-      else
-      {
-        if(liftMaster.getSelectedSensorPosition() < constant.ELEVATOR_ZERO_NEUTRAL_POSITION_DEADBAND)
-        {
+      else{
+        if(liftMaster.getSelectedSensorPosition() < constant.ELEVATOR_ZERO_NEUTRAL_POSITION_DEADBAND){
           liftMaster.set(ControlMode.Position, setPoint, DemandType.ArbitraryFeedForward, constant.ELEVATOR_ZERO_F);
-
         }
-        double slope = (constant.ELEVATOR_F_DOWN - constant.ELEVATOR_ZERO_F) / (constant.ELEVATOR_ZERO_NEUTRAL_POSITION - constant.ELEVATOR_ZERO_NEUTRAL_POSITION_DEADBAND);
-        double y_intercept = constant.ELEVATOR_ZERO_F - (slope*constant.ELEVATOR_ZERO_NEUTRAL_POSITION_DEADBAND);
-        double linear_F = slope*(liftMaster.getSelectedSensorPosition()) + y_intercept;
-        liftMaster.set(ControlMode.Position, setPoint, DemandType.ArbitraryFeedForward, linear_F);
+        else {
+          double slope = (constant.ELEVATOR_F_DOWN - constant.ELEVATOR_ZERO_F) / (constant.ELEVATOR_ZERO_NEUTRAL_POSITION - constant.ELEVATOR_ZERO_NEUTRAL_POSITION_DEADBAND);
+          double y_intercept = constant.ELEVATOR_ZERO_F - (slope*constant.ELEVATOR_ZERO_NEUTRAL_POSITION_DEADBAND);
+          double linear_F = slope*(liftMaster.getSelectedSensorPosition()) + y_intercept;
+          liftMaster.set(ControlMode.Position, setPoint, DemandType.ArbitraryFeedForward, linear_F);
+        }
       }
     }
 
