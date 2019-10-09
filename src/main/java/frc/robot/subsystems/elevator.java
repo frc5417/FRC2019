@@ -31,7 +31,7 @@ public class elevator extends Subsystem {
 
   DigitalInput topLimit = new DigitalInput(constant.liftTopSwitch); //limit switches
   DigitalInput bottomLimit = new DigitalInput(constant.liftBottomSwitch);
-  
+
 
   int liftState = 0; //init variable for state of liftMaster
   int setPoint = 0; //where lift wants to go based off lift positions and button panel
@@ -40,14 +40,14 @@ public class elevator extends Subsystem {
   int liftStateHatch = 0;
   Boolean firstCargoPress = true;
 
-  //the values below need to be changed for final robot, they are in encoder rotation units, 
-  //to find values, rotate to the correct point, and find encoder value, and input it in the correct spot 
+  //the values below need to be changed for final robot, they are in encoder rotation units,
+  //to find values, rotate to the correct point, and find encoder value, and input it in the correct spot
 
   static int floorPos = 0;  //position in nuetral state
   static int cargoHumanPos = 1250;
   static int cargoFloorPos = 0;
   static int hatch1Pos = 1000;
-  static int hatch2Pos = 7000; //position in hatch 2 height 
+  static int hatch2Pos = 7000; //position in hatch 2 height
   static int hatch3Pos = 14050; //position in hatch 3 height
   static int cargo1Pos = 4250; //position in cargo 1 height
   static int cargo2Pos = 11200; //position in cargo 2 height
@@ -65,7 +65,7 @@ public class elevator extends Subsystem {
   to change the state of the hatch, change this value to 0, 1, or 2;';'
   */
 
-  
+
   @Override
   public void initDefaultCommand() { //default command
 
@@ -78,6 +78,8 @@ public class elevator extends Subsystem {
 		liftMaster.configPeakOutputForward(1.0, 0);
 		liftMaster.configPeakOutputReverse(-0.7, 0);
     //setting pid constant
+
+    liftSlave.follow(liftMaster);
 
     //(PID SLOT, Value)
     liftMaster.config_kP(0, constant.liftP);
@@ -103,9 +105,9 @@ public class elevator extends Subsystem {
 
 
   }
-  
 
-    
+
+
 
 public void getLimitSwitches(){
   System.out.println("Top Limit: " + topLimit.get() +" Bottom Limit: " + bottomLimit.get());
@@ -117,32 +119,32 @@ public void getLimitSwitches(){
     }
 
   //returns current lift position
-   // return liftPositions[liftState]; //liftState is current state of the lift used for switch statement, liftPosition is the array 
-  
+   // return liftPositions[liftState]; //liftState is current state of the lift used for switch statement, liftPosition is the array
+
 
 //zeros lift with driver station button
     public void zeroLift(){
-      
+
        // liftMaster.set(ControlMode.PercentOutput, .2);
         //if(bottomLimit.get()){
           liftMaster.setSelectedSensorPosition(0); // zero sensor
           liftMaster.set(ControlMode.PercentOutput, 0);
        // }
-      
+
     }
 
 
 
 //test percent output for lift
     public void analogLift(Double input){
-    
+
       liftMaster.set(ControlMode.PercentOutput, input * .8);
-   
-    
+
+
   }
 
 
-    // final lift loop 
+    // final lift loop
 
   public void liftLoop(Integer buttonPressed){
     switch(buttonPressed){ //find value of hatchliftMasterState and :
@@ -183,7 +185,7 @@ public void getLimitSwitches(){
           break;
        default :  //if state is unreadable (someone broke something)
       setPoint = 0;
-           System.out.println("lift shut down, liftState: " + setPoint); 
+           System.out.println("lift shut down, liftState: " + setPoint);
            break;
     }
 
@@ -216,8 +218,8 @@ public void getLimitSwitches(){
       }
     }
 
-  } 
-  
+  }
+
   public void floorReturn(Boolean buttonReleased){
     if (buttonReleased){
       liftState = 0;
